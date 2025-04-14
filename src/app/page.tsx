@@ -112,7 +112,7 @@ const communicationLessons = [
 
 export default function Home() {
   // Example props for demonstration
-  const isLoggedIn = true
+  const isLoggedIn = false
   const username = "Nam"
   const avatarUrl = "/placeholder.svg?height=40&width=40"
   const notificationCount = 5

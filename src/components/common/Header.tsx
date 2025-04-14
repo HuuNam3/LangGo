@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { ThemeToggle } from "./ThemeToggle"
 
 interface HeaderProps {
   isLoggedIn?: boolean
@@ -67,6 +68,7 @@ export function Header({ isLoggedIn = false, username = "", avatarUrl = "", noti
                 )}
               </Button>
             </div>
+            <ThemeToggle/>
 
             {isLoggedIn ? (
               <div className="flex items-center gap-2">
@@ -78,10 +80,12 @@ export function Header({ isLoggedIn = false, username = "", avatarUrl = "", noti
                 </Avatar>
               </div>
             ) : (
-              <Button className="bg-white text-violet-600 hover:bg-white/90 cursor-pointer">
-                <User className="h-4 w-4 mr-2" />
-                Login
-              </Button>
+              <Link href="/login">
+                <Button className="bg-white text-violet-600 hover:bg-white/90 cursor-pointer">
+                  <User className="h-4 w-4 mr-2" />
+                  Login
+                </Button>
+              </Link>
             )}
           </nav>
         </div>
