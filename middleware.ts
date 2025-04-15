@@ -1,34 +1,36 @@
-import { NextResponse } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export async function middleware(request) {
-  const { pathname } = request.nextUrl
+export async function middleware(req: any) {
+  const { pathname } = req.nextUrl;
+  const token = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-  // Protect routes that should only be accessible to authenticated users
-  const protectedPaths = ["/dashboard"]
-  const isPathProtected = protectedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+  // Bảo vệ các tuyến đường
+  const protectedPaths = ["/"];
+  const isPathProtected = protectedPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  );
 
-  if (isPathProtected) {
-    const token = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    })
-
-    // Redirect to login if not authenticated
-    if (!token) {
-      const url = new URL(`/login`, request.url)
-      url.searchParams.set("callbackUrl", encodeURI(pathname))
-      return NextResponse.redirect(url)
-    }
+  if (isPathProtected && !token) {
+    const url = new URL(`/login`, req.url);
+    url.searchParams.set("callbackUrl", encodeURI(pathname));
+    return NextResponse.redirect(url);
   }
 
-  return NextResponse.next()
+  // Chuyển hướng người dùng đã đăng nhập khỏi /login hoặc /register
+  if (
+    token &&
+    (pathname === "/login" || pathname === "/register")
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    // Add paths that should be checked by the middleware
-    "/dashboard/:path*",
-    "/api/protected/:path*",
-  ],
-}
+  matcher: ["/", "/login", "/register"],
+};

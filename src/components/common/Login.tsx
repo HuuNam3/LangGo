@@ -18,7 +18,7 @@ import { loginSchema } from "@/lib/schemas"
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+  const callbackUrl = searchParams.get("callbackUrl") || "/"
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -50,6 +50,7 @@ export default function LoginPage() {
 
       router.push(callbackUrl)
       router.refresh()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("Something went wrong. Please try again.")
       setIsLoading(false)

@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Bell, BookOpen, Menu, Search, User, X } from "lucide-react"
+import { Bell, BookOpen, LogOut, Menu, Search, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -10,16 +10,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./ThemeToggle"
+import { useSession, signOut } from "next-auth/react"
 
-interface HeaderProps {
-  isLoggedIn?: boolean
-  username?: string
-  avatarUrl?: string
-  notificationCount?: number
-}
-
-export function Header({ isLoggedIn = false, username = "", avatarUrl = "", notificationCount = 0 }: HeaderProps) {
+export function Header() {
   const [showSearch, setShowSearch] = useState(false)
+  const { data: session } = useSession()
+  console.log(session)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 shadow-md">
@@ -61,23 +57,25 @@ export function Header({ isLoggedIn = false, username = "", avatarUrl = "", noti
             <div className="relative">
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative cursor-pointer">
                 <Bell className="h-5 w-5" />
-                {notificationCount > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
-                    {notificationCount > 9 ? "9+" : notificationCount}
-                  </Badge>
-                )}
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
+                  5
+                </Badge>
               </Button>
             </div>
-            <ThemeToggle/>
+            <ThemeToggle />
 
-            {isLoggedIn ? (
+            {session ? (
               <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8 border-2 border-white/20">
-                  <AvatarImage src={avatarUrl || "/placeholder.svg"} alt={username} />
+                  <AvatarImage src={session.user || "/placeholder.svg"} alt={session.user?.name} />
                   <AvatarFallback className="bg-violet-700 text-white">
-                    {username.slice(0, 1).toUpperCase()}
+                    {session?.user?.name?.slice(0, 1).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
+                <Button variant="ghost" size="sm" className="ml-1 text-white hover:bg-white hover:text-black cursor-pointer" onClick={() => signOut()}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
               </div>
             ) : (
               <Link href="/login">
@@ -105,18 +103,18 @@ export function Header({ isLoggedIn = false, username = "", avatarUrl = "", noti
         <div className="relative">
           <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative">
             <Bell className="h-5 w-5" />
-            {notificationCount > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
-                {notificationCount > 9 ? "9+" : notificationCount}
-              </Badge>
-            )}
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
+              5
+            </Badge>
           </Button>
         </div>
 
-        {isLoggedIn ? (
+        {session ? (
           <Avatar className="h-8 w-8 border-2 border-white/20">
-            <AvatarImage src={avatarUrl || "/placeholder.svg"} alt={username} />
-            <AvatarFallback className="bg-violet-700 text-white">{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarImage src={session.user || "/placeholder.svg"} alt={session.user?.name} />
+            <AvatarFallback className="bg-violet-700 text-white">
+              {session.user?.name?.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         ) : (
           <Button size="sm" className="bg-white text-violet-600 hover:bg-white/90">
@@ -146,9 +144,18 @@ export function Header({ isLoggedIn = false, username = "", avatarUrl = "", noti
               >
                 <Bell className="h-5 w-5" />
                 Notifications
-                {notificationCount > 0 && <Badge className="bg-red-500 ml-2">{notificationCount}</Badge>}
+                {55 > 0 && <Badge className="bg-red-500 ml-2">{55}</Badge>}
               </Link>
-              {!isLoggedIn && (
+              {session ? (
+                <Button
+                  variant="ghost"
+                  className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2 justify-start p-0"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </Button>
+              ) : (
                 <Link
                   href="/login"
                   className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"

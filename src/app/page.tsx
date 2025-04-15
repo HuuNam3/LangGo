@@ -111,15 +111,10 @@ const communicationLessons = [
 ]
 
 export default function Home() {
-  // Example props for demonstration
-  const isLoggedIn = false
-  const username = "Nam"
-  const avatarUrl = "/placeholder.svg?height=40&width=40"
-  const notificationCount = 5
 
   return (
     <div className="flex flex-col">
-      <Header isLoggedIn={isLoggedIn} username={username} avatarUrl={avatarUrl} notificationCount={notificationCount} />
+      <Header />
 
       <main className="flex-1 mt-1 flex item-center justify-center flex-col">
         <div className="flex w-full justify-center">
