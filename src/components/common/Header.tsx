@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Bell, BookOpen, LogOut, Menu, Search, User, X } from "lucide-react"
+import { Bell, BookOpen, LogOut, Menu, Search, Settings, User, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -11,6 +11,13 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./ThemeToggle"
 import { useSession, signOut } from "next-auth/react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
@@ -65,17 +72,40 @@ export function Header() {
             <ThemeToggle />
 
             {session ? (
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8 border-2 border-white/20">
-                  <AvatarImage src={session.user || "/placeholder.svg"} alt={session.user?.name} />
-                  <AvatarFallback className="bg-violet-700 text-white">
-                    {session?.user?.name?.slice(0, 1).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <Button variant="ghost" size="sm" className="ml-1 text-white hover:bg-white hover:text-black cursor-pointer" onClick={() => signOut()}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </Button>
+              <div className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
+                      <AvatarImage src={session.user?.avatar || "/placeholder.svg"} alt={session.user?.name} />
+                      <AvatarFallback className="bg-violet-700 text-white">
+                        {session?.user?.name?.slice(0, 1).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        {session.user?.name && <p className="font-medium">{session.user.name}</p>}
+                        {session.user?.email && <p className="text-sm text-muted-foreground">{session.user.email}</p>}
+                      </div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer flex items-center">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => signOut()}
+                      className="cursor-pointer text-red-500 focus:text-red-500"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ) : (
               <Link href="/login">
@@ -110,16 +140,44 @@ export function Header() {
         </div>
 
         {session ? (
-          <Avatar className="h-8 w-8 border-2 border-white/20">
-            <AvatarImage src={session.user || "/placeholder.svg"} alt={session.user?.name} />
-            <AvatarFallback className="bg-violet-700 text-white">
-              {session.user?.name?.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
+                  <AvatarImage src={session.user?.image || "/placeholder.svg"} alt={session.user?.name} />
+                  <AvatarFallback className="bg-violet-700 text-white">
+                    {session.user?.name?.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    {session.user?.name && <p className="font-medium">{session.user.name}</p>}
+                    {session.user?.email && <p className="text-sm text-muted-foreground">{session.user.email}</p>}
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="cursor-pointer flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500 focus:text-red-500">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ) : (
-          <Button size="sm" className="bg-white text-violet-600 hover:bg-white/90">
-            Login
-          </Button>
+          <Link href="/login">
+            <Button size="sm" className="bg-white text-violet-600 hover:bg-white/90">
+              Login
+            </Button>
+          </Link>
         )}
 
         <Sheet>
@@ -146,16 +204,7 @@ export function Header() {
                 Notifications
                 {55 > 0 && <Badge className="bg-red-500 ml-2">{55}</Badge>}
               </Link>
-              {session ? (
-                <Button
-                  variant="ghost"
-                  className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2 justify-start p-0"
-                  onClick={() => signOut()}
-                >
-                  <LogOut className="h-5 w-5" />
-                  Logout
-                </Button>
-              ) : (
+              {!session && (
                 <Link
                   href="/login"
                   className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"

@@ -2,26 +2,8 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
-import { compare, hash,hashSync } from "bcrypt"
-
-// This would be your database implementation
-// For this example, we'll use a simple in-memory store
-const users = [
-  {
-    id: 1,
-    name: "Nam",
-    username: "anhnam",
-    password: hashSync("123123", 10),
-    email: "nam@gmail.com"
-  },
-  {
-    id: 2,
-    name: "Tran Thi Bich",
-    username: "bichtran456",
-    password: hashSync("Pass#4567", 10),
-    email: "tranthibich456@gmail.com"
-  }
-];
+import { compare, hash } from "bcrypt"
+import {accountsUser} from "@/lib/data"
 
 export const authOptions = {
   providers: [
@@ -48,7 +30,7 @@ export const authOptions = {
         const isEmail = credentials.emailOrUsername.includes("@")
 
         // Find user by email or username
-        const user = users.find((user) =>
+        const user = accountsUser.find((user) =>
           isEmail ? user.email === credentials.emailOrUsername : user.username === credentials.emailOrUsername,
         )
 
@@ -66,6 +48,7 @@ export const authOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
+          avatar: user.avatar,
           username: user.username,
         }
       },
@@ -81,6 +64,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id
         token.username = user.username
+        token.avatar = user.avatar;
       }
       // Store the provider used to sign in
       if (account) {
@@ -92,6 +76,7 @@ export const authOptions = {
       if (token) {
         session.user.id = token.id
         session.user.username = token.username
+        session.user.avatar = token.avatar;
         session.provider = token.provider
       }
       return session
@@ -115,11 +100,11 @@ export async function register(formData) {
   }
 
   // Check if user already exists (by email or username)
-  if (users.some((user) => user.email === email)) {
+  if (accountsUser.some((user) => user.email === email)) {
     return { error: "Email already in use" }
   }
 
-  if (users.some((user) => user.username === username)) {
+  if (accountsUser.some((user) => user.username === username)) {
     return { error: "Username already taken" }
   }
 
@@ -135,7 +120,7 @@ export async function register(formData) {
     username,
   }
 
-  users.push(newUser)
+  accountsUser.push(newUser)
 
   return { success: true }
 }
