@@ -9,7 +9,6 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // Bảo vệ các tuyến đường
   const protectedPaths = ["/"];
   const isPathProtected = protectedPaths.some(
     (path) => pathname === path || pathname.startsWith(`${path}/`)
@@ -27,7 +26,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Chuyển hướng người dùng đã đăng nhập khỏi /login hoặc /register
   if (
     token &&
     (pathname === "/login" || pathname === "/register")

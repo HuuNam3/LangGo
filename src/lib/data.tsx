@@ -18,6 +18,6 @@ export const User = {
   avatar: "/images/avatar.png",
   level: "so cap",
   progress: 0,
-  courses: ["courses communicate basic"],
+  courses: [""],
   achievements: ["not yet"],
 };
