@@ -1,62 +1,113 @@
 # Mandarin Learning
 
 ## Introduction
-The Mandarin Learning Project is an innovative and engaging platform designed to make learning Mandarin Chinese accessible, interactive, and effective for learners of all levels. With the growing global importance of Mandarin as a language of culture, business, and communication, our project aims to empower individuals to master this fascinating language through a blend of modern technology and proven pedagogical approaches.
+Mandarin Learning is a modern web application designed to help users learn Mandarin Chinese effectively. Built with Next.js and React, it offers a responsive, user-friendly interface with multilingual support and structured learning paths.
 
-**Project Status**: Mandarin Learning is developing
+**Project Status**: In Development (Version 0.1.0)
 
-## Features
+## Core Features
+- **Multilingual Interface**
+  - Support for English, Chinese (Mandarin), and Vietnamese
+  - Language preference persistence using cookies
+  - Automatic browser language detection
+  - Easy language switching
 
+- **Learning Content**
+  - Structured lesson categories:
+    - Beginner lessons (pronunciation, characters)
+    - HSK test preparation
+    - Practical communication
+  - Professional instructor-led content
+  - Duration-tracked lessons
+  - Difficulty level indicators
 
-## Technologies Used
-- **Next.js**: A React framework for high-performance web development.
-- **Shadcn**: Customizable UI component library.
-- **Lucide**: Lightweight and elegant icon library.
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI design.
-- **Sonner**: Modern toast notification library.
-- **Bcrypt**: Secure password hashing library.
+- **User System**
+  - Secure authentication with NextAuth.js
+  - User profiles with progress tracking
+  - Achievement system
+  - Course enrollment management
 
-## Installation
-To run Mandarin Learning locally, follow these steps:
+## Tech Stack
+### Frontend
+- **Next.js 15.3.0**: React framework for production
+- **React 19**: UI library
+- **Tailwind CSS**: Utility-first styling
+- **Radix UI**: Accessible component primitives
+- **Framer Motion**: Animation library
+- **Lucide React**: Icon system
 
-1. **Clone the repository**:
+### Authentication & State Management
+- **NextAuth.js**: Authentication system
+- **Bcrypt**: Password hashing
+- **js-cookie**: Cookie management
+- **Zod**: Schema validation
+
+### Development Tools
+- **TypeScript**: Type safety
+- **ESLint**: Code linting
+- **React Hook Form**: Form handling
+
+## Getting Started
+
+### Prerequisites
+- Node.js (LTS version recommended)
+- npm or yarn package manager
+
+### Installation
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/HuuNam3/Mandarin-Learning
+   git clone https://github.com/HuuNam3/Mandarin-Learning.git
+   cd mandarin-learning
    ```
-2. **Navigate to the project directory**:
-   ```bash
-   cd mandarin-learninglearning
-   ```
-3. **Install dependencies**:
-   Ensure you have Node.js installed. Then run:
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
-   This will install the required libraries, including:
-   - `next`
-   - `@shadcn/ui`
-   - `lucide-react`
-   - `tailwindcss`
-   - `sonner`
-   - `bcrypt`
 
-4. **Set up environment variables** (if needed):
-   - Create a `.env.local` file in the root directory and add necessary environment variables (e.g., for authentication or external APIs).
-   - Example:
-     ```
-     NEXTAUTH_SECRET=your_secret_key
-     ```
+3. **Environment Setup**
+   Create a `.env.local` file in the root directory:
+   ```env
+   NEXTAUTH_SECRET=your_auth_secret
+   NEXTAUTH_URL=http://localhost:3000
+   ```
 
-5. **Run the project**:
+4. **Start Development Server**
    ```bash
    npm run dev
    ```
-   The project will be available at `http://localhost:3000`.
+   Access the application at `http://localhost:3000`
 
-## Usage
+## Project Structure
+```
+mandarin-learning/
+├── src/
+│   ├── app/           # Next.js 13+ app directory
+│   ├── components/    # Reusable UI components
+│   └── lib/          # Utilities and data
+│       ├── data/     # Content and user data
+│       └── i18n/     # Internationalization
+├── public/           # Static assets
+└── package.json      # Project dependencies
+```
+
+## Available Scripts
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm start`: Run production server
+- `npm run lint`: Run ESLint
 
 ## Contributing
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## Contact
+- **Developer**: Huu Nam
 - **Email**: nhnam4411@gmail.com
-- **GitHub**: [https://github.com/HuuNam3](https://github.com/HuuNam3)
+- **GitHub**: [HuuNam3](https://github.com/HuuNam3)
+
+## License
+This project is private and not licensed for public use.
