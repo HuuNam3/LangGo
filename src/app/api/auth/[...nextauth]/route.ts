@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
 import { compare, hash } from "bcrypt"
-import {accountsUser} from "@/lib/data"
+import { accountsUser } from "@/lib/data/users"
 
 export const authOptions = {
   providers: [

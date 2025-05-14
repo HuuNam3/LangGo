@@ -18,11 +18,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { LanguageSwitcher } from "./LanguageSwitcher"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
   const { data: session } = useSession()
-  console.log(session)
+  const { t } = useLanguage()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 shadow-md">
@@ -42,13 +44,13 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex flex-1 max-w-md mx-4">
-            <div className="relative w-full">
+            <div className="relative w-full group">
               <Input
                 type="search"
-                placeholder="Search Mandarin lessons..."
+                placeholder={t.common.searchPlaceholder}
                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white focus:text-black focus:placeholder:text-gray-500"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60 transition-colors duration-200 group-focus-within:text-black" />
             </div>
           </div>
 
@@ -58,18 +60,21 @@ export function Header() {
               className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1"
             >
               <BookOpen className="h-4 w-4" />
-              Lessons Learned
+              {t.common.lessonsLearned}
             </Link>
 
-            <div className="relative">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative cursor-pointer">
-                <Bell className="h-5 w-5" />
-                <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
-                  5
-                </Badge>
-              </Button>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative cursor-pointer">
+                  <Bell className="h-5 w-5" />
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
+                    5
+                  </Badge>
+                </Button>
+              </div>
             </div>
             <ThemeToggle />
+            <LanguageSwitcher />
 
             {session ? (
               <div className="relative">
@@ -111,7 +116,7 @@ export function Header() {
               <Link href="/login">
                 <Button className="bg-white text-violet-600 hover:bg-white/90 cursor-pointer">
                   <User className="h-4 w-4 mr-2" />
-                  Login
+                  {t.common.login}
                 </Button>
               </Link>
             )}
@@ -138,6 +143,8 @@ export function Header() {
             </Badge>
           </Button>
         </div>
+
+        <LanguageSwitcher />
 
         {session ? (
           <div className="relative">

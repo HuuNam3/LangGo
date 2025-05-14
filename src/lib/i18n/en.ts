@@ -1,0 +1,38 @@
+export const en = {
+  common: {
+    login: "Login",
+    logout: "Logout",
+    profile: "Profile",
+    settings: "Settings",
+    searchPlaceholder: "Search for lessons...",
+    lessonsLearned: "Lessons Learned",
+    notifications: "Notifications",
+  },
+  home: {
+    banner: {
+      title: "Master Mandarin Chinese at Your Own Pace",
+      subtitle: "From basic characters to fluent conversations, find the perfect lessons for your learning journey.",
+      startLearning: "Start Learning",
+      takeAssessment: "Take Assessment",
+    },
+    sections: {
+      beginners: {
+        title: "For Beginners",
+        description: "Start your Mandarin journey with these foundational lessons",
+      },
+      testTakers: {
+        title: "For Test Takers",
+        description: "Prepare for HSK and other Mandarin proficiency exams",
+      },
+      communication: {
+        title: "For Communication",
+        description: "Practical Mandarin for real-world situations",
+      },
+    },
+  },
+  lessons: {
+    duration: "Duration",
+    instructor: "Instructor",
+    level: "Level",
+  },
+}; 

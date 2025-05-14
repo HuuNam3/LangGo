@@ -1,17 +1,30 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Clock, User } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/lib/i18n/LanguageContext"
 
 interface Lesson {
   id: string
-  title: string
   image: string
   instructor: string
   duration: string
   level: string
+  translations: {
+    en: {
+      title: string;
+    };
+    zh: {
+      title: string;
+    };
+    vi: {
+      title: string;
+    };
+  };
 }
 
 interface LessonSectionProps {
@@ -22,47 +35,43 @@ interface LessonSectionProps {
 }
 
 export function LessonSection({ title, description, lessons, accentColor }: LessonSectionProps) {
+  const { t, language } = useLanguage()
+
   return (
     <section className="space-y-6">
       <div className="space-y-2">
-        <h2
-          className={cn(
-            "text-2xl md:text-3xl font-bold inline-block bg-gradient-to-r bg-clip-text text-transparent",
-            accentColor,
-          )}
-        >
-          {title}
-        </h2>
+        <h2 className="text-2xl font-bold">{title}</h2>
         <p className="text-muted-foreground">{description}</p>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {lessons.map((lesson) => (
-          <Link href={`/lessons/${lesson.id}`} key={lesson.id} className="group">
-            <Card className="h-full overflow-hidden transition-all hover:shadow-md">
-              <div className="relative h-40 w-full overflow-hidden">
+          <Link key={lesson.id} href={`/lessons/${lesson.id}`}>
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="relative h-48">
                 <Image
-                  src={lesson.image || "/placeholder.svg"}
-                  alt={lesson.title}
+                  src={lesson.image}
+                  alt={lesson.translations[language].title}
                   fill
-                  className="object-cover transition-transform group-hover:scale-105"
+                  className="object-cover"
                 />
-                <Badge className={cn("absolute top-2 right-2 bg-gradient-to-r", accentColor)}>{lesson.level}</Badge>
               </div>
-              <CardHeader className="p-4 pb-2">
-                <h3 className="font-semibold line-clamp-2 text-lg group-hover:text-violet-600 transition-colors">
-                  {lesson.title}
-                </h3>
+              <CardHeader>
+                <h3 className="font-semibold line-clamp-2">{lesson.translations[language].title}</h3>
               </CardHeader>
-              <CardContent className="p-4 pt-0 pb-2">
+              <CardContent className="space-y-2">
                 <div className="flex items-center text-sm text-muted-foreground">
-                  <User className="h-3.5 w-3.5 mr-1" />
-                  <span>{lesson.instructor}</span>
+                  <User className="h-4 w-4 mr-1" />
+                  <span>{t.lessons.instructor}: {lesson.instructor}</span>
+                </div>
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{t.lessons.duration}: {lesson.translations[language].duration}</span>
                 </div>
               </CardContent>
-              <CardFooter className="p-4 pt-0 flex items-center text-sm text-muted-foreground">
-                <Clock className="h-3.5 w-3.5 mr-1" />
-                <span>{lesson.duration}</span>
+              <CardFooter>
+                <Badge className={cn("bg-gradient-to-r", accentColor)}>
+                  {t.lessons.level}: {lesson.level}
+                </Badge>
               </CardFooter>
             </Card>
           </Link>
