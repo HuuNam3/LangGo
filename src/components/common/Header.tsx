@@ -88,7 +88,7 @@ export function Header() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                      <AvatarImage src={(session.user?.image || "/placeholder.svg") as string} alt={session.user?.name || ""} />
+                      <AvatarImage src={(session.user?.avatar || "/placeholder.svg") as string} alt={session.user?.name || ""} />
                       <AvatarFallback className="bg-violet-700 text-white">
                         {session?.user?.name?.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
@@ -158,7 +158,7 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                  <AvatarImage src={(session.user?.image || "/placeholder.svg") as string} alt={session.user?.name || ""} />
+                  <AvatarImage src={(session.user?.avatar || "/placeholder.svg") as string} alt={session.user?.name || ""} />
                   <AvatarFallback className="bg-violet-700 text-white">
                     {session?.user?.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
