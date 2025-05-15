@@ -18,16 +18,16 @@ export default function UserProfile() {
       {/* Phần thông tin cá nhân */}
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-white shadow-md rounded-lg p-6">
         <Image
-          src={session.user.avatar || "/placeholder-avatar.jpg"}
+          src={session.user?.image || "/placeholder-avatar.jpg"}
           alt="User Avatar"
           width={120}
           height={120}
           className="rounded-full border-2 border-blue-500"
         />
         <div className="text-center md:text-left">
-          <h1 className="text-2xl font-bold text-gray-800">{session.user.name}</h1>
-          <p className="text-gray-600">@{session.user.username}</p>
-          <p className="text-gray-600">{session.user.email}</p>
+          <h1 className="text-2xl font-bold text-gray-800">{session.user?.name}</h1>
+          <p className="text-gray-600">@{session.user?.email?.split('@')[0]}</p>
+          <p className="text-gray-600">{session.user?.email}</p>
           <Link href="/settings">
             <Button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white">
               Chỉnh sửa hồ sơ
