@@ -2,7 +2,14 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Bell, BookOpen, LogOut, Menu, Search, Settings, User, X } from "lucide-react"
+import { 
+  Bell, 
+  BookOpen, 
+  Menu, 
+  Search, 
+  User, 
+  X 
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -81,7 +88,7 @@ export function Header() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                      <AvatarImage src={session.user?.avatar || "/placeholder.svg"} alt={session.user?.name} />
+                      <AvatarImage src={(session.user?.avatar || "/placeholder.svg") as string} alt={session.user?.name || ""} />
                       <AvatarFallback className="bg-violet-700 text-white">
                         {session?.user?.name?.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
@@ -106,7 +113,7 @@ export function Header() {
                       onClick={() => signOut()}
                       className="cursor-pointer text-red-500 focus:text-red-500"
                     >
-                      <LogOut className="mr-2 h-4 w-4" />
+                      <User className="mr-2 h-4 w-4" />
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -151,7 +158,7 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                  <AvatarImage src={session.user?.image || "/placeholder.svg"} alt={session.user?.name} />
+                  <AvatarImage src={(session.user?.image || "/placeholder.svg") as string} alt={session.user?.name || ""} />
                   <AvatarFallback className="bg-violet-700 text-white">
                     {session.user?.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -173,7 +180,7 @@ export function Header() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500 focus:text-red-500">
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <User className="mr-2 h-4 w-4" />
                   <span>Logout</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

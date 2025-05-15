@@ -1,8 +1,8 @@
 import { hashSync } from "bcrypt";
 
 // Define interfaces for type safety
-export interface AccountUser {
-  id: number;
+export interface IAccountUser {
+  id: string;
   name: string;
   username: string;
   avatar: string;
@@ -10,7 +10,7 @@ export interface AccountUser {
   email: string;
 }
 
-export interface UserProfile {
+export interface IUserProfile {
   name: string;
   username: string;
   email: string;
@@ -22,9 +22,9 @@ export interface UserProfile {
 }
 
 // Sample user accounts data
-export const accountsUser: AccountUser[] = [
+export const accountsUser: IAccountUser[] = [
   {
-    id: 1,
+    id: "user-1",
     name: "Nam",
     username: "anhnam",
     avatar: "/images/avatar.png",
@@ -34,7 +34,7 @@ export const accountsUser: AccountUser[] = [
 ];
 
 // Sample user profile data
-export const defaultUserProfile: UserProfile = {
+export const defaultUserProfile: IUserProfile = {
   name: "Nam",
   username: "anhnam",
   email: "nam@gmail.com",

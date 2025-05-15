@@ -33,7 +33,7 @@ export default function RegisterPage() {
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setIsLoading(true)
-    setError("")
+    setError("")  // Clear any previous errors
 
     try {
       const formData = new FormData()
@@ -60,6 +60,7 @@ export default function RegisterPage() {
     } catch (error) {
       setError("Something went wrong. Please try again.")
       setIsLoading(false)
+      console.log(error)
     }
   }
 

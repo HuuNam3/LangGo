@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { redirect } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 
 export default async function AdminLayout({
@@ -7,11 +6,6 @@ export default async function AdminLayout({
 }: {
   children: ReactNode;
 }) {
-  // TODO: Add authentication check here
-  // const session = await getServerSession();
-  // if (!session?.user?.isAdmin) {
-  //   redirect('/login');
-  // }
 
   return (
     <div className="flex min-h-screen">

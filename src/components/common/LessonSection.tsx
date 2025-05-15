@@ -7,30 +7,12 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { useLanguage } from "@/lib/i18n/LanguageContext"
-
-interface Lesson {
-  id: string
-  image: string
-  instructor: string
-  duration: string
-  level: string
-  translations: {
-    en: {
-      title: string;
-    };
-    zh: {
-      title: string;
-    };
-    vi: {
-      title: string;
-    };
-  };
-}
+import { ILesson } from "@/lib/data/lessons"
 
 interface LessonSectionProps {
   title: string
   description: string
-  lessons: Lesson[]
+  lessons: ILesson[]
   accentColor: string
 }
 

@@ -1,13 +1,12 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserStats } from "@/components/profile/UserStats"
 import { LearningProgress } from "@/components/profile/LearningProgress"
 import { Achievements } from "@/components/profile/Achievements"
 import { UserSettings } from "@/components/profile/UserSettings"
+import Image from "next/image"
 
 export default function ProfilePage() {
   return (
@@ -15,10 +14,12 @@ export default function ProfilePage() {
       {/* Profile Header */}
       <div className="flex items-start gap-6 mb-8">
         <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-purple-600">
-          <img
+          <Image
             src="/placeholder-avatar.jpg"
             alt="Profile"
-            className="w-full h-full object-cover"
+            width={96}
+            height={96}
+            className="object-cover"
           />
         </div>
         <div className="flex-1">

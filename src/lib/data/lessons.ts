@@ -1,4 +1,4 @@
-interface Lesson {
+export interface ILesson {
   id: string;
   image: string;
   instructor: string;
@@ -20,7 +20,7 @@ interface Lesson {
   };
 }
 
-export const beginnerLessons: Lesson[] = [
+export const beginnerLessons: ILesson[] = [
   {
     id: "1",
     image: "/images/basic.jpg",
@@ -103,7 +103,7 @@ export const beginnerLessons: Lesson[] = [
   },
 ];
 
-export const testTakerLessons: Lesson[] = [
+export const testTakerLessons: ILesson[] = [
   {
     id: "5",
     image: "/images/basic.jpg",
@@ -186,7 +186,7 @@ export const testTakerLessons: Lesson[] = [
   },
 ];
 
-export const communicationLessons: Lesson[] = [
+export const communicationLessons: ILesson[] = [
   {
     id: "9",
     image: "/images/basic.jpg",
