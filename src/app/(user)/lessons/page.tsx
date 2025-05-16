@@ -1,13 +1,15 @@
 "use client"
 
-import Link from "next/link"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
+import { PronunciationButton } from "@/components/ui/pronunciation-button"
 import {
   ChevronLeft,
   Volume2,
@@ -26,18 +28,62 @@ import {
 } from "lucide-react"
 
 export default function DailyGreetingsLesson() {
+  // State to track the active tab
+  const [activeTab, setActiveTab] = useState("introduction")
+
+  // Function to handle tab changes
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+  }
+
+  // Function to navigate to the next tab
+  const goToNextTab = () => {
+    if (activeTab === "introduction") setActiveTab("content")
+    else if (activeTab === "content") setActiveTab("questions")
+    else if (activeTab === "questions") setActiveTab("writing")
+  }
+
+  // Function to navigate to the previous tab
+  const goToPreviousTab = () => {
+    if (activeTab === "content") setActiveTab("introduction")
+    else if (activeTab === "questions") setActiveTab("content")
+    else if (activeTab === "writing") setActiveTab("questions")
+  }
+
   return (
     <div className="min-h-screen bg-white">
+
       {/* Main content */}
-      {/* <main className="mx-auto max-w-4xl px-4 py-8"> */}
-        <Tabs defaultValue="introduction" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="introduction">Introduction</TabsTrigger>
-            <TabsTrigger value="content">Lesson Content</TabsTrigger>
-            <TabsTrigger value="questions">Questions</TabsTrigger>
-            <TabsTrigger value="writing">Writing Practice</TabsTrigger>
+      <main className="mx-auto max-w-4xl px-4 py-8">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="mb-6 grid w-full grid-cols-4">
+            <TabsTrigger
+              value="introduction"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+            >
+              Introduction
+            </TabsTrigger>
+            <TabsTrigger
+              value="content"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+            >
+              Lesson Content
+            </TabsTrigger>
+            <TabsTrigger
+              value="questions"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+            >
+              Questions
+            </TabsTrigger>
+            <TabsTrigger
+              value="writing"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+            >
+              Writing Practice
+            </TabsTrigger>
           </TabsList>
 
+          {/* Introduction Tab */}
           <TabsContent value="introduction">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               {/* Left sidebar */}
@@ -48,9 +94,11 @@ export default function DailyGreetingsLesson() {
                   </div>
                   <div className="space-y-4 p-4">
                     <div className="flex items-center gap-3">
-                      <img
-                        src="/placeholder.svg?height=50&width=50"
+                      <Image
+                        src="/placeholder.svg"
                         alt="Chen Jie"
+                        width={48}
+                        height={48}
                         className="h-12 w-12 rounded-full object-cover"
                       />
                       <div>
@@ -106,9 +154,11 @@ export default function DailyGreetingsLesson() {
 
                   <div className="p-6">
                     <div className="mb-6 aspect-video overflow-hidden rounded-lg bg-gray-100">
-                      <img
-                        src="/placeholder.svg?height=300&width=600"
+                      <Image
+                        src="/placeholder.svg"
                         alt="Lesson Introduction"
+                        width={600}
+                        height={300}
                         className="h-full w-full object-cover"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -121,14 +171,14 @@ export default function DailyGreetingsLesson() {
                     <div className="mb-6 rounded-lg bg-purple-50 p-4">
                       <h3 className="mb-2 text-lg font-semibold text-purple-800">About This Lesson</h3>
                       <p className="text-gray-700">
-                        Welcome to "Daily Greetings & Phrases" - an essential lesson for anyone beginning their Mandarin
-                        learning journey. In this lesson, you'll learn how to greet people in different situations and
+                        Welcome to &ldquo;Daily Greetings &amp; Phrases&rdquo; - an essential lesson for anyone beginning their Mandarin
+                        learning journey. In this lesson, you&apos;ll learn how to greet people in different situations and
                         times of day, introduce yourself, and engage in basic conversations.
                       </p>
                     </div>
 
                     <div className="mb-6">
-                      <h3 className="mb-3 text-lg font-semibold">What You'll Learn</h3>
+                      <h3 className="mb-3 text-lg font-semibold">What You&apos;ll Learn</h3>
                       <ul className="space-y-2">
                         <li className="flex items-start gap-2">
                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
@@ -156,14 +206,14 @@ export default function DailyGreetingsLesson() {
                     <div className="mb-6">
                       <h3 className="mb-3 text-lg font-semibold">Prerequisites</h3>
                       <p className="text-gray-700">
-                        This lesson assumes you have completed "Basic Mandarin Pronunciation" (Lesson 1) and have a basic
-                        understanding of Mandarin tones. No other prior knowledge is required.
+                        This lesson assumes you have completed &ldquo;Basic Mandarin Pronunciation&rdquo; (Lesson 1) and have a
+                        basic understanding of Mandarin tones. No other prior knowledge is required.
                       </p>
                     </div>
 
                     <div className="flex justify-end">
                       <Button
-                        value="content"
+                        onClick={goToNextTab}
                         className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
                       >
                         Start Lesson
@@ -176,6 +226,7 @@ export default function DailyGreetingsLesson() {
             </div>
           </TabsContent>
 
+          {/* Lesson Content Tab */}
           <TabsContent value="content">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               {/* Left sidebar */}
@@ -226,36 +277,28 @@ export default function DailyGreetingsLesson() {
                         <p className="font-medium">你好</p>
                         <p className="text-sm text-gray-500">Nǐ hǎo</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-purple-600">
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
+                      <PronunciationButton chinese="你好" pinyin="Nǐ hǎo" />
                     </div>
                     <div className="flex items-center justify-between p-4">
                       <div>
                         <p className="font-medium">早上好</p>
                         <p className="text-sm text-gray-500">Zǎoshang hǎo</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-purple-600">
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
+                      <PronunciationButton chinese="早上好" pinyin="Zǎoshang hǎo" />
                     </div>
                     <div className="flex items-center justify-between p-4">
                       <div>
                         <p className="font-medium">晚上好</p>
                         <p className="text-sm text-gray-500">Wǎnshang hǎo</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-purple-600">
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
+                      <PronunciationButton chinese="晚上好" pinyin="Wǎnshang hǎo" />
                     </div>
                     <div className="flex items-center justify-between p-4">
                       <div>
                         <p className="font-medium">再见</p>
                         <p className="text-sm text-gray-500">Zàijiàn</p>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-purple-600">
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
+                      <PronunciationButton chinese="再见" pinyin="Zàijiàn" />
                     </div>
                   </div>
                 </Card>
@@ -272,8 +315,8 @@ export default function DailyGreetingsLesson() {
                     <div className="mb-8 rounded-lg bg-purple-50 p-4">
                       <p className="mb-2 text-sm font-medium text-purple-700">Learning Objective</p>
                       <p className="text-gray-700">
-                        In this section, you will learn the most common greetings used in daily Mandarin conversations. By
-                        the end, you'll be able to confidently greet people at different times of the day.
+                        In this section, you will learn the most common greetings used in daily Mandarin conversations.
+                        By the end, you&apos;ll be able to confidently greet people at different times of the day.
                       </p>
                     </div>
 
@@ -285,13 +328,16 @@ export default function DailyGreetingsLesson() {
                             <h3 className="text-lg font-bold">你好 / Nǐ hǎo</h3>
                             <p className="text-gray-600">Hello</p>
                           </div>
-                          <Button variant="outline" size="sm" className="rounded-full">
-                            <Volume2 className="h-4 w-4" />
-                          </Button>
+                          <PronunciationButton 
+                            chinese="你好" 
+                            pinyin="Nǐ hǎo" 
+                            variant="outline" 
+                            className="rounded-full" 
+                          />
                         </div>
                         <p className="mb-3 text-gray-700">
-                          This is the most common greeting in Mandarin Chinese. It can be used at any time of the day when
-                          meeting someone.
+                          This is the most common greeting in Mandarin Chinese. It can be used at any time of the day
+                          when meeting someone.
                         </p>
                         <div className="rounded-md bg-gray-100 p-3">
                           <p className="font-medium">Example:</p>
@@ -307,9 +353,12 @@ export default function DailyGreetingsLesson() {
                             <h3 className="text-lg font-bold">早上好 / Zǎoshang hǎo</h3>
                             <p className="text-gray-600">Good morning</p>
                           </div>
-                          <Button variant="outline" size="sm" className="rounded-full">
-                            <Volume2 className="h-4 w-4" />
-                          </Button>
+                          <PronunciationButton 
+                            chinese="早上好" 
+                            pinyin="Zǎoshang hǎo" 
+                            variant="outline" 
+                            className="rounded-full" 
+                          />
                         </div>
                         <p className="mb-3 text-gray-700">
                           Use this greeting in the morning, typically from when you wake up until around 11 AM.
@@ -328,9 +377,12 @@ export default function DailyGreetingsLesson() {
                             <h3 className="text-lg font-bold">晚上好 / Wǎnshang hǎo</h3>
                             <p className="text-gray-600">Good evening</p>
                           </div>
-                          <Button variant="outline" size="sm" className="rounded-full">
-                            <Volume2 className="h-4 w-4" />
-                          </Button>
+                          <PronunciationButton 
+                            chinese="晚上好" 
+                            pinyin="Wǎnshang hǎo" 
+                            variant="outline" 
+                            className="rounded-full" 
+                          />
                         </div>
                         <p className="mb-3 text-gray-700">
                           Use this greeting in the evening, typically after sunset or around 6 PM.
@@ -349,12 +401,15 @@ export default function DailyGreetingsLesson() {
                             <h3 className="text-lg font-bold">再见 / Zàijiàn</h3>
                             <p className="text-gray-600">Goodbye</p>
                           </div>
-                          <Button variant="outline" size="sm" className="rounded-full">
-                            <Volume2 className="h-4 w-4" />
-                          </Button>
+                          <PronunciationButton 
+                            chinese="再见" 
+                            pinyin="Zàijiàn" 
+                            variant="outline" 
+                            className="rounded-full" 
+                          />
                         </div>
                         <p className="mb-3 text-gray-700">
-                          This is the standard way to say goodbye in Mandarin. It literally means "see you again."
+                          This is the standard way to say goodbye in Mandarin. It literally means &ldquo;see you again.&rdquo;
                         </p>
                         <div className="rounded-md bg-gray-100 p-3">
                           <p className="font-medium">Example:</p>
@@ -365,12 +420,12 @@ export default function DailyGreetingsLesson() {
                     </div>
 
                     <div className="mt-8 flex justify-between">
-                      <Button value="introduction" variant="outline" className="gap-2">
+                      <Button onClick={goToPreviousTab} variant="outline" className="gap-2">
                         <ChevronLeft className="h-4 w-4" />
                         Previous
                       </Button>
                       <Button
-                        value="questions"
+                        onClick={goToNextTab}
                         className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
                       >
                         Next
@@ -383,6 +438,7 @@ export default function DailyGreetingsLesson() {
             </div>
           </TabsContent>
 
+          {/* Questions Tab */}
           <TabsContent value="questions">
             <Card className="overflow-hidden">
               <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
@@ -406,7 +462,7 @@ export default function DailyGreetingsLesson() {
                 <div className="space-y-8">
                   {/* Question 1 */}
                   <div className="rounded-lg border border-gray-200 p-5">
-                    <h3 className="mb-4 text-lg font-semibold">1. How do you say "Hello" in Mandarin?</h3>
+                    <h3 className="mb-4 text-lg font-semibold">1. How do you say &ldquo;Hello&rdquo; in Mandarin?</h3>
                     <RadioGroup defaultValue="option-1">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2">
@@ -431,7 +487,7 @@ export default function DailyGreetingsLesson() {
 
                   {/* Question 2 */}
                   <div className="rounded-lg border border-gray-200 p-5">
-                    <h3 className="mb-4 text-lg font-semibold">2. When would you use "早上好" (Zǎoshang hǎo)?</h3>
+                    <h3 className="mb-4 text-lg font-semibold">2. When would you use &ldquo;早上好&rdquo; (Zǎoshang hǎo)?</h3>
                     <RadioGroup defaultValue="option-1">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2">
@@ -456,7 +512,7 @@ export default function DailyGreetingsLesson() {
 
                   {/* Question 3 */}
                   <div className="rounded-lg border border-gray-200 p-5">
-                    <h3 className="mb-4 text-lg font-semibold">3. What does "你吃饭了吗?" (Nǐ chīfàn le ma?) mean?</h3>
+                    <h3 className="mb-4 text-lg font-semibold">3. What does &ldquo;你吃饭了吗?&rdquo; (Nǐ chīfàn le ma?) mean?</h3>
                     <RadioGroup defaultValue="option-1">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2">
@@ -481,7 +537,7 @@ export default function DailyGreetingsLesson() {
 
                   {/* Question 4 */}
                   <div className="rounded-lg border border-gray-200 p-5">
-                    <h3 className="mb-4 text-lg font-semibold">4. How do you say "Goodbye" in Mandarin?</h3>
+                    <h3 className="mb-4 text-lg font-semibold">4. How do you say &ldquo;Goodbye&rdquo; in Mandarin?</h3>
                     <RadioGroup defaultValue="option-1">
                       <div className="space-y-3">
                         <div className="flex items-center space-x-2">
@@ -517,12 +573,12 @@ export default function DailyGreetingsLesson() {
                 </div>
 
                 <div className="mt-8 flex justify-between">
-                  <Button value="content" variant="outline" className="gap-2">
+                  <Button onClick={goToPreviousTab} variant="outline" className="gap-2">
                     <ChevronLeft className="h-4 w-4" />
                     Previous
                   </Button>
                   <Button
-                    value="writing"
+                    onClick={goToNextTab}
                     className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
                   >
                     Next
@@ -533,6 +589,7 @@ export default function DailyGreetingsLesson() {
             </Card>
           </TabsContent>
 
+          {/* Writing Practice Tab */}
           <TabsContent value="writing">
             <Card className="overflow-hidden">
               <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
@@ -576,97 +633,111 @@ export default function DailyGreetingsLesson() {
                       </div>
                     </div>
 
-                    {/* Character 2 */}
-                    <div className="rounded-lg border border-gray-200 p-5">
-                      <div className="mb-4 flex flex-wrap items-center gap-4">
-                        <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100 text-4xl font-bold">
-                          好
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold">好 (hǎo)</h3>
-                          <p className="text-gray-600">Meaning: good</p>
-                          <div className="mt-1 flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="h-8 gap-1">
-                              <Volume2 className="h-3 w-3" />
-                              Listen
-                            </Button>
-                            <Button variant="outline" size="sm" className="h-8 gap-1">
-                              <FileText className="h-3 w-3" />
-                              Stroke Order
-                            </Button>
-                          </div>
-                        </div>
+                    <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <Camera className="mb-2 h-8 w-8 text-gray-400" />
+                        <h4 className="mb-1 text-sm font-medium">Upload your written character</h4>
+                        <p className="mb-4 text-xs text-gray-500">
+                          Take a photo of your handwritten character or upload from your device
+                        </p>
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <Upload className="h-4 w-4" />
+                          Upload Photo
+                        </Button>
                       </div>
+                    </div>
+                  </div>
 
-                      <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <Camera className="mb-2 h-8 w-8 text-gray-400" />
-                          <h4 className="mb-1 text-sm font-medium">Upload your written character</h4>
-                          <p className="mb-4 text-xs text-gray-500">
-                            Take a photo of your handwritten character or upload from your device
-                          </p>
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <Upload className="h-4 w-4" />
-                            Upload Photo
+                  {/* Character 2 */}
+                  <div className="rounded-lg border border-gray-200 p-5">
+                    <div className="mb-4 flex flex-wrap items-center gap-4">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100 text-4xl font-bold">
+                        好
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">好 (hǎo)</h3>
+                        <p className="text-gray-600">Meaning: good</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <Button variant="outline" size="sm" className="h-8 gap-1">
+                            <Volume2 className="h-3 w-3" />
+                            Listen
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-8 gap-1">
+                            <FileText className="h-3 w-3" />
+                            Stroke Order
                           </Button>
                         </div>
                       </div>
                     </div>
 
-                    {/* Character 3 */}
-                    <div className="rounded-lg border border-gray-200 p-5">
-                      <div className="mb-4 flex flex-wrap items-center gap-4">
-                        <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100 text-4xl font-bold">
-                          再
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold">再 (zài)</h3>
-                          <p className="text-gray-600">Meaning: again</p>
-                          <div className="mt-1 flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="h-8 gap-1">
-                              <Volume2 className="h-3 w-3" />
-                              Listen
-                            </Button>
-                            <Button variant="outline" size="sm" className="h-8 gap-1">
-                              <FileText className="h-3 w-3" />
-                              Stroke Order
-                            </Button>
-                          </div>
-                        </div>
+                    <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <Camera className="mb-2 h-8 w-8 text-gray-400" />
+                        <h4 className="mb-1 text-sm font-medium">Upload your written character</h4>
+                        <p className="mb-4 text-xs text-gray-500">
+                          Take a photo of your handwritten character or upload from your device
+                        </p>
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <Upload className="h-4 w-4" />
+                          Upload Photo
+                        </Button>
                       </div>
+                    </div>
+                  </div>
 
-                      <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
-                        <div className="flex flex-col items-center justify-center text-center">
-                          <Camera className="mb-2 h-8 w-8 text-gray-400" />
-                          <h4 className="mb-1 text-sm font-medium">Upload your written character</h4>
-                          <p className="mb-4 text-xs text-gray-500">
-                            Take a photo of your handwritten character or upload from your device
-                          </p>
-                          <Button variant="outline" size="sm" className="gap-2">
-                            <Upload className="h-4 w-4" />
-                            Upload Photo
+                  {/* Character 3 */}
+                  <div className="rounded-lg border border-gray-200 p-5">
+                    <div className="mb-4 flex flex-wrap items-center gap-4">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-gray-100 text-4xl font-bold">
+                        再
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">再 (zài)</h3>
+                        <p className="text-gray-600">Meaning: again</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <Button variant="outline" size="sm" className="h-8 gap-1">
+                            <Volume2 className="h-3 w-3" />
+                            Listen
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-8 gap-1">
+                            <FileText className="h-3 w-3" />
+                            Stroke Order
                           </Button>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-6 flex justify-between">
-                      <Button value="questions" variant="outline" className="gap-2">
-                        <ChevronLeft className="h-4 w-4" />
-                        Previous
-                      </Button>
-                      <Button className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600">
-                        <Send className="h-4 w-4" />
-                        Submit All Characters
-                      </Button>
+                    <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6">
+                      <div className="flex flex-col items-center justify-center text-center">
+                        <Camera className="mb-2 h-8 w-8 text-gray-400" />
+                        <h4 className="mb-1 text-sm font-medium">Upload your written character</h4>
+                        <p className="mb-4 text-xs text-gray-500">
+                          Take a photo of your handwritten character or upload from your device
+                        </p>
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <Upload className="h-4 w-4" />
+                          Upload Photo
+                        </Button>
+                      </div>
                     </div>
+                  </div>
+
+                  <div className="mt-6 flex justify-between">
+                    <Button onClick={goToPreviousTab} variant="outline" className="gap-2">
+                      <ChevronLeft className="h-4 w-4" />
+                      Previous
+                    </Button>
+                    <Button className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600">
+                      <Send className="h-4 w-4" />
+                      Submit All Characters
+                    </Button>
                   </div>
                 </div>
               </div>
             </Card>
           </TabsContent>
         </Tabs>
-      {/* </main> */}
+      </main>
     </div>
   )
 }

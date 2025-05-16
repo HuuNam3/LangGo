@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { AlertCircle, MoveLeft } from "lucide-react"
@@ -20,7 +22,7 @@ export default function NotFound() {
             404
           </h1>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Page not found</h2>
-          <p className="text-slate-600">Oops! The lesson you're looking for doesn't exist or has been moved.</p>
+          <p className="text-slate-600">Oops! The lesson you&apos;re looking for doesn&apos;t exist or has been moved.</p>
         </div>
 
         {/* Back to home button */}
