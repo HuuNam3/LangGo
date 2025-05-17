@@ -1,0 +1,52 @@
+import { MongoClient, ServerApiVersion } from "mongodb";
+
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please add your Mongo URI to .env.local");
+}
+
+if (!process.env.MONGODB_DB) {
+  throw new Error("Please add your Mongo Database name to .env.local");
+}
+
+const uri = process.env.MONGODB_URI;
+const dbName = process.env.MONGODB_DB;
+
+const options = {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+  // Add connection timeout options
+  connectTimeoutMS: 10000,
+  socketTimeoutMS: 10000,
+};
+
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
+
+try {
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+  // Test the connection
+  clientPromise.then(() => {
+    console.log('Successfully connected to MongoDB.');
+  }).catch((error) => {
+    console.error('MongoDB connection error:', error);
+  });
+} catch (error) {
+  console.error('Failed to initialize MongoDB client:', error);
+  throw error;
+}
+
+export async function getDb() {
+  try {
+    const client = await clientPromise;
+    return client.db(dbName);
+  } catch (error) {
+    console.error('Error getting database:', error);
+    throw error;
+  }
+}
+
+export default clientPromise;

@@ -8,6 +8,7 @@ import { beginnerLessons, testTakerLessons, communicationLessons } from "@/lib/d
 
 export default function Home() {
   const { t } = useLanguage()
+  
   return (
     <>
       <Header/>

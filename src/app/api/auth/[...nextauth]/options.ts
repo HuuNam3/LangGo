@@ -3,8 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
 import { compare, hash } from "bcrypt"
-import { accountsUser, type IAccountUser } from "@/lib/data/users"
 import { JWT } from "next-auth/jwt"
+import { getDb } from "@/lib/mongodb"
 
 // Extend User type
 interface ExtendedUser extends User {
@@ -49,31 +49,41 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // Check if the input is an email or username
-        const isEmail = credentials.emailOrUsername.includes("@")
+        try {
+          const db = await getDb()
+          const users = db.collection('users')
 
-        // Find user by email or username
-        const user = accountsUser.find((user) =>
-          isEmail ? user.email === credentials.emailOrUsername : user.username === credentials.emailOrUsername,
-        )
+          // Check if the input is an email or username
+          const isEmail = credentials.emailOrUsername.includes("@")
 
-        if (!user) {
+          // Find user by email or username
+          const user = await users.findOne(
+            isEmail 
+              ? { email: credentials.emailOrUsername }
+              : { username: credentials.emailOrUsername }
+          )
+
+          if (!user) {
+            return null
+          }
+
+          const isPasswordValid = await compare(credentials.password, user.password)
+
+          if (!isPasswordValid) {
+            return null
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+            avatar: user.avatar,
+            username: user.username,
+          } as ExtendedUser
+        } catch (error) {
+          console.error("Error in authorize:", error)
           return null
         }
-
-        const isPasswordValid = await compare(credentials.password, user.password)
-
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          avatar: user.avatar,
-          username: user.username,
-        } as ExtendedUser
       },
     }),
   ],
@@ -124,31 +134,40 @@ export async function register(formData: FormData) {
     return { error: "Missing required fields" }
   }
 
-  // Check if user already exists (by email or username)
-  if (accountsUser.some((user) => user.email === email)) {
-    return { error: "Email already in use" }
+  try {
+    // Hash password
+    const hashedPassword = await hash(password, 10)
+
+    // Create user using API endpoint
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password: hashedPassword,
+        name,
+        username,
+        avatar: "/images/avatar.png", // Default avatar
+        createdAt: new Date(),
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      if (response.status === 409) {
+        return { error: "Email or username already exists" }
+      }
+      throw new Error('Failed to create user')
+    }
+
+    return { success: true, userId: data.insertedId }
+  } catch (error) {
+    console.error("Error in register:", error)
+    return { error: "Failed to create user" }
   }
-
-  if (accountsUser.some((user) => user.username === username)) {
-    return { error: "Username already taken" }
-  }
-
-  // Hash password
-  const hashedPassword = await hash(password, 10)
-
-  // Create user
-  const newUser: IAccountUser = {
-    id: `user-${Date.now()}`,
-    email,
-    password: hashedPassword,
-    name,
-    username,
-    avatar: "/images/avatar.png", // Default avatar
-  }
-
-  accountsUser.push(newUser)
-
-  return { success: true }
 }
 
 const handler = NextAuth(authOptions)

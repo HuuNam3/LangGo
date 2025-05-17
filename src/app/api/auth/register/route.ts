@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { hash } from "bcrypt"
-import { accountsUser } from "@/lib/data/users"
+import { getDb } from "@/lib/mongodb"
 
 export async function POST(request: Request) {
   try {
@@ -14,12 +14,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // Check if user already exists (by email or username)
-    if (accountsUser.some((user) => user.email === email)) {
+    const db = await getDb()
+    const users = db.collection('users')
+
+    // Check if user already exists (by email)
+    const existingEmail = await users.findOne({ email })
+    if (existingEmail) {
       return NextResponse.json({ error: "Email already in use" }, { status: 400 })
     }
 
-    if (accountsUser.some((user) => user.username === username)) {
+    // Check if username is taken
+    const existingUsername = await users.findOne({ username })
+    if (existingUsername) {
       return NextResponse.json({ error: "Username already taken" }, { status: 400 })
     }
 
@@ -28,17 +34,20 @@ export async function POST(request: Request) {
 
     // Create user
     const newUser = {
-      id: `user-${Date.now()}`,
       email,
       password: hashedPassword,
       name,
       username,
       avatar: "/images/avatar.png", // Default avatar
+      createdAt: new Date()
     }
 
-    accountsUser.push(newUser)
+    const result = await users.insertOne(newUser)
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ 
+      success: true, 
+      userId: result.insertedId.toString() 
+    })
   } catch (error) {
     console.error("Registration error:", error)
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
