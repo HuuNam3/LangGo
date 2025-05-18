@@ -1,11 +1,11 @@
 export const zh = {
-  common: {
+  header: {
     login: "登录",
     logout: "登出",
     profile: "个人资料",
     settings: "设置",
     searchPlaceholder: "搜索课程...",
-    lessonsLearned: "已学课程",
+    myCourses: "我的课程",
     notifications: "通知",
   },
   home: {

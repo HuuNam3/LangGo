@@ -42,10 +42,10 @@ export function Header() {
             <Link href="/" className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
                 <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
-                  ML
+                  LG
                 </span>
               </div>
-              <span className="font-bold text-white text-xl hidden sm:inline-block">Mandarin Learning</span>
+              <span className="font-bold text-white text-xl hidden sm:inline-block">LangGo</span>
             </Link>
           </div>
 
@@ -54,7 +54,7 @@ export function Header() {
             <div className="relative w-full group">
               <Input
                 type="search"
-                placeholder={t.common.searchPlaceholder}
+                placeholder={t.header.searchPlaceholder}
                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white focus:text-black focus:placeholder:text-gray-500"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/60 transition-colors duration-200 group-focus-within:text-black" />
@@ -63,11 +63,11 @@ export function Header() {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/lessons"
+              href="/courses"
               className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1"
             >
               <BookOpen className="h-4 w-4" />
-              {t.common.lessonsLearned}
+              {t.header.myCourses}
             </Link>
 
             <div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ export function Header() {
                     <DropdownMenuItem asChild>
                       <Link href="/profile" className="cursor-pointer flex items-center">
                         <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                        <span>{t.header.profile}</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -114,7 +114,7 @@ export function Header() {
                       className="cursor-pointer text-red-500 focus:text-red-500"
                     >
                       <User className="mr-2 h-4 w-4" />
-                      <span>Logout</span>
+                      <span>{t.header.logout}</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -123,7 +123,7 @@ export function Header() {
               <Link href="/login">
                 <Button className="bg-white text-violet-600 hover:bg-white/90 cursor-pointer">
                   <User className="h-4 w-4 mr-2" />
-                  {t.common.login}
+                  {t.header.login}
                 </Button>
               </Link>
             )}
@@ -175,13 +175,13 @@ export function Header() {
                 <DropdownMenuItem asChild>
                   <Link href="/profile" className="cursor-pointer flex items-center">
                     <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                    <span>{t.header.profile}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500 focus:text-red-500">
                   <User className="mr-2 h-4 w-4" />
-                  <span>Logout</span>
+                  <span>{t.header.logout}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -189,7 +189,7 @@ export function Header() {
         ) : (
           <Link href="/login">
             <Button size="sm" className="bg-white text-violet-600 hover:bg-white/90">
-              Login
+              {t.header.login}
             </Button>
           </Link>
         )}
@@ -208,14 +208,14 @@ export function Header() {
                 className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"
               >
                 <BookOpen className="h-5 w-5" />
-                Lessons Learned
+                {t.header.myCourses}
               </Link>
               <Link
                 href="/notifications"
                 className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"
               >
                 <Bell className="h-5 w-5" />
-                Notifications
+                {t.header.notifications}
                 {55 > 0 && <Badge className="bg-red-500 ml-2">{55}</Badge>}
               </Link>
               {!session && (
@@ -224,7 +224,7 @@ export function Header() {
                   className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"
                 >
                   <User className="h-5 w-5" />
-                  Login
+                  {t.header.login}
                 </Link>
               )}
             </div>
@@ -243,7 +243,7 @@ export function Header() {
           <div className="relative">
             <Input
               type="search"
-              placeholder="Search Mandarin lessons..."
+              placeholder={t.header.searchPlaceholder}
               className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white focus:text-black focus:placeholder:text-gray-500"
               autoFocus={showSearch}
             />

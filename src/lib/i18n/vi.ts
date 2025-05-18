@@ -1,11 +1,11 @@
 export const vi = {
-  common: {
+  header: {
     login: "Đăng nhập",
     logout: "Đăng xuất",
     profile: "Hồ sơ",
     settings: "Cài đặt",
-    searchPlaceholder: "Tìm kiếm bài học...",
-    lessonsLearned: "Bài học đã học",
+    searchPlaceholder: "Tìm kiếm khóa học...",
+    myCourses: "Khóa học của tôi",
     notifications: "Thông báo",
   },
   home: {

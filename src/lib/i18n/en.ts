@@ -1,11 +1,11 @@
 export const en = {
-  common: {
+  header: {
     login: "Login",
     logout: "Logout",
     profile: "Profile",
     settings: "Settings",
-    searchPlaceholder: "Search for lessons...",
-    lessonsLearned: "Lessons Learned",
+    searchPlaceholder: "Search for courses...",
+    myCourses: "My Courses",
     notifications: "Notifications",
   },
   home: {

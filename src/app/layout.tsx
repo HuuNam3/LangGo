@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Madarin Learning",
-  description: "learn chinese with me",
+  title: "LangGo",
+  description: "learn language with me",
 };
 
 export default function RootLayout({
