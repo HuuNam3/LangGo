@@ -30,6 +30,16 @@ export const en = {
       },
     },
   },
+  footer: {
+    title: "Learn language effectively with our comprehensive learning platform",
+    quickLinks: "Quick Links",
+    about: "About",
+    contact: "Contact",
+    terms: "Terms",
+    courses: "Courses",
+    dictionary: "Dictionary",
+    tutorials: "Tutorials",
+  },
   lessons: {
     duration: "Duration",
     instructor: "Instructor",

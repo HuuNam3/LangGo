@@ -30,6 +30,17 @@ export const zh = {
       },
     },
   },
+  footer: {
+    title: "使用我们的全面学习平台有效学习语言",
+    quickLinks: "快速链接",
+    about: "关于我们",
+    contact: "联系",
+    terms: "条款",
+    privacy: "隐私",
+    courses: "课程",
+    dictionary: "字典",
+    tutorials: "教程",
+  },
   lessons: {
     duration: "时长",
     instructor: "讲师",

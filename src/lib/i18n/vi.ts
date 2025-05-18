@@ -30,6 +30,17 @@ export const vi = {
       },
     },
   },
+  footer: {
+    title: "Học ngôn ngữ quả với nền tảng học ngôn ngữ đa ngôn ngữ",
+    quickLinks: "Liên kết nhanh",
+    about: "Về chúng tôi",
+    contact: "Liên hệ",
+    terms: "Điều khoản",
+    privacy: "Quyền riêng tư",
+    courses: "Khóa học",
+    dictionary: "Từ điển",
+    tutorials: "Hướng dẫn",
+  },
   lessons: {
     duration: "Thời lượng",
     instructor: "Giảng viên",
