@@ -10,7 +10,7 @@ export const zh = {
   },
   home: {
     banner: {
-      title: "按照自己的节奏掌握普通话",
+      title: "开始您的语言之旅，一个多语言平台，适合所有水平",
       subtitle: "从基础汉字到流利对话，找到适合您学习之旅的完美课程。",
       startLearning: "开始学习",
       takeAssessment: "水平测试",

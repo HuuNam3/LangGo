@@ -44,7 +44,7 @@ export function HomeBanner() {
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10">
         <div className="absolute top-1/4 left-1/4 text-8xl font-bold">你好</div>
-        <div className="absolute bottom-1/3 right-1/4 text-8xl font-bold">学习</div>
+        <div className="absolute bottom-1/3 right-2/5 text-8xl font-bold">学习</div>
       </div>
     </div>
   )

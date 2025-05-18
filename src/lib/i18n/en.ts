@@ -10,7 +10,7 @@ export const en = {
   },
   home: {
     banner: {
-      title: "Master Mandarin Chinese at Your Own Pace",
+      title: "Begin your language journey with a multilingual platform for all levels",
       subtitle: "From basic characters to fluent conversations, find the perfect lessons for your learning journey.",
       startLearning: "Start Learning",
       takeAssessment: "Take Assessment",

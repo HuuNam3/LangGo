@@ -10,7 +10,7 @@ export const vi = {
   },
   home: {
     banner: {
-      title: "Học tiếng Trung theo tốc độ của bạn",
+      title: "Bắt đầu hành trình học ngôn ngữ mới cùng nền tảng đa ngôn ngữ cho mọi cấp độ",
       subtitle: "Từ các ký tự cơ bản đến giao tiếp trôi chảy, tìm các bài học phù hợp cho hành trình học tập của bạn.",
       startLearning: "Bắt đầu học",
       takeAssessment: "Kiểm tra trình độ",
