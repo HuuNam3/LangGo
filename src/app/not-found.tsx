@@ -32,9 +32,9 @@ export default function NotFound() {
             size="lg"
             className="group bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all duration-300"
           >
-            <Link href="/lessons" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <MoveLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-              Back to Lessons
+              Back to home
             </Link>
           </Button>
         </div>

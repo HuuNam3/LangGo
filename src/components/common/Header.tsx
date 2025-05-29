@@ -8,7 +8,8 @@ import {
   Menu, 
   Search, 
   User, 
-  X 
+  X,
+   
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -27,11 +28,45 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LanguageSwitcher } from "./LanguageSwitcher"
 import { useLanguage } from "@/lib/i18n/LanguageContext"
+import { LoadingSpinner } from "./LoadingSpinner"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
-  const { data: session } = useSession()
-  const { t } = useLanguage()
+  const { data: session, status } = useSession()
+  const { t, isLoading: languageLoading } = useLanguage()
+
+  const isLoading = status === "loading" || languageLoading
+
+  if (isLoading) {
+    return (
+      <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 shadow-md">
+        <div className="h-full w-full flex justify-center">
+          <div className="container flex h-16 items-center justify-between">
+            {/* Logo skeleton */}
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <Skeleton className="h-6 w-24 hidden sm:block" />
+            </div>
+
+            {/* Search skeleton */}
+            <div className="hidden md:flex flex-1 max-w-md mx-4">
+              <Skeleton className="h-10 w-full" />
+            </div>
+
+            {/* Navigation items skeleton */}
+            <nav className="hidden md:flex items-center gap-6">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </nav>
+          </div>
+        </div>
+      </header>
+    )
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 shadow-md">
@@ -63,7 +98,7 @@ export function Header() {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/courses"
+              href="/my-courses"
               className="text-sm font-medium text-white hover:text-white/80 transition-colors flex items-center gap-1"
             >
               <BookOpen className="h-4 w-4" />
@@ -74,16 +109,18 @@ export function Header() {
               <div className="relative">
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative cursor-pointer">
                   <Bell className="h-5 w-5" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
+                  {/* <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
                     5
-                  </Badge>
+                  </Badge> */}
                 </Button>
               </div>
             </div>
             <ThemeToggle />
             <LanguageSwitcher />
 
-            {session ? (
+            {isLoading ? (
+              <LoadingSpinner size="sm" />
+            ) : session ? (
               <div className="relative">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -153,7 +190,9 @@ export function Header() {
 
         <LanguageSwitcher />
 
-        {session ? (
+        {isLoading ? (
+          <LoadingSpinner size="sm"/>
+        ) : session ? (
           <div className="relative">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

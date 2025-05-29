@@ -39,6 +39,7 @@ export const en = {
     courses: "Courses",
     dictionary: "Dictionary",
     tutorials: "Tutorials",
+    resources: "Resources",
   },
   lessons: {
     duration: "Duration",

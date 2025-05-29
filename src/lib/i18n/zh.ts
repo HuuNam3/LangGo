@@ -40,6 +40,7 @@ export const zh = {
     courses: "课程",
     dictionary: "字典",
     tutorials: "教程",
+    resources: "资源",
   },
   lessons: {
     duration: "时长",

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import { en } from './en';
 import { zh } from './zh';
 import { vi } from './vi';
+import { useSession } from 'next-auth/react';
 
 type Language = 'en' | 'zh' | 'vi';
 type Translations = typeof en;
@@ -13,6 +14,7 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: Translations;
+  isLoading: boolean;
 }
 
 const translations = {
@@ -33,25 +35,37 @@ const COOKIE_OPTIONS = {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const { status } = useSession();
   const [language, setLanguage] = useState<Language>('en');
   const [t, setT] = useState<Translations>(translations[language]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Try to get language from cookie
+    // If session is loading, keep isLoading true
+    if (status === 'loading') {
+      setIsLoading(true);
+      return;
+    }
+
+    // After session check, proceed with language setup
     const savedLang = Cookies.get(LANGUAGE_COOKIE_NAME) as Language;
     if (savedLang && translations[savedLang]) {
       setLanguage(savedLang);
       setT(translations[savedLang]);
     } else {
-      // If no cookie exists, try to detect browser language
       const browserLang = navigator.language.split('-')[0] as Language;
       if (translations[browserLang]) {
         setLanguage(browserLang);
         setT(translations[browserLang]);
         Cookies.set(LANGUAGE_COOKIE_NAME, browserLang, COOKIE_OPTIONS);
+      } else {
+        setLanguage('en');
+        setT(translations.en);
+        Cookies.set(LANGUAGE_COOKIE_NAME, 'en', COOKIE_OPTIONS);
       }
     }
-  }, []);
+    setIsLoading(false);
+  }, [status]);
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
@@ -60,7 +74,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t, isLoading }}>
       {children}
     </LanguageContext.Provider>
   );

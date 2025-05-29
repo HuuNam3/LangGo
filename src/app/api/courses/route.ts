@@ -11,13 +11,13 @@ export async function GET() {
         $lookup: {
           from: "lessons",
           localField: "_id",
-          foreignField: "lesson_list",
+          foreignField: "courseId",
           as: "lessons"
         }
       }
     ]
     
-    const combinedData = await db.collection('lesson_list').aggregate(pipeline).toArray()
+    const combinedData = await db.collection('courses').aggregate(pipeline).toArray()
     return NextResponse.json(combinedData)
   } catch (error) {
     console.error('GET lessons error:', error)
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const db = await getDb()
-    const lessons = db.collection('lesson_list')
+    const lessons = db.collection('courses')
 
     // Check for existing lesson ID
     const existingLesson = await lessons.findOne({ id: body.id })
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-    const result = await put('lesson_list', body._id, body)
+    const result = await put('courses', body._id, body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('PUT lesson error:', error)
@@ -76,7 +76,7 @@ export async function PUT(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json()
-    const result = await patch('lesson_list', body._id, body)
+    const result = await patch('courses', body._id, body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('PATCH lesson error:', error)
@@ -90,7 +90,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const body = await request.json()
-    const result = await del('lesson_list', body)
+    const result = await del('courses', body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('DELETE lesson error:', error)

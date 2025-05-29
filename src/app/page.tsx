@@ -5,45 +5,27 @@ import { LessonSection } from "@/components/common/LessonSection"
 import { Footer } from "@/components/common/Footer"
 import { useEffect, useState } from "react"
 import Loading from "@/components/common/Loading"
+import { ICourse } from "@/types/lessons"
 
 export default function Home() {
-  const [lessonLists, setLessonLists] = useState<any[]>([])
+  const [courses, setCourses] = useState<ICourse[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchLessons = async () => {
+    const fetchCourses = async () => {
       try {
-        const response = await fetch('/api/lesson_list')
+        const response = await fetch('/api/courses')
         const data = await response.json()
-        setLessonLists(data)
+        setCourses(data)
       } catch (error) {
-        console.error('Failed to fetch lessons:', error)
+        console.error('Failed to fetch courses:', error)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchLessons()
+    fetchCourses()
   }, [])
-
-  if (isLoading) {
-    return (
-      <>
-        <Header/>
-        <div className="flex flex-col">
-          <div className="flex w-full justify-center">
-            <HomeBanner />
-          </div>
-          <div className="flex w-full justify-center">
-            <div className="container py-12 space-y-16">
-            <Loading/>
-            </div>
-          </div>
-        </div>
-        <Footer/>
-      </>
-    )
-  }
 
   return (
     <>
@@ -54,21 +36,23 @@ export default function Home() {
         </div>
         <div className="flex w-full justify-center">
           <div className="container py-12 space-y-16">
-            {lessonLists.map((list) => (
-              <LessonSection
-                key={list._id}
-                title={list.title}
-                description={list.description}
-                lessons={list.lessons}
-                accentColor={
-                  list.category === "beginner" 
-                    ? "from-pink-500 to-orange-500"
-                    : list.category === "test taker"
-                    ? "from-violet-500 to-fuchsia-500" 
-                    : "from-blue-500 to-cyan-500"
-                }
-              />
-            ))}
+            {isLoading ? (
+              <Loading/>
+            ) : (
+              courses.map((course, index) => (
+                <LessonSection
+                  key={course._id}
+                  title={course.title}
+                  description={course.description}
+                  lessons={course.lessons}
+                  accentColor={
+                    index === 0 ? "from-pink-500 to-orange-500" :
+                    index === 1 ? "from-violet-500 to-fuchsia-500" :
+                    "from-blue-500 to-cyan-500"
+                  }
+                />
+              ))
+            )} 
           </div>
         </div>
       </div>

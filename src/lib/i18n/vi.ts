@@ -40,6 +40,7 @@ export const vi = {
     courses: "Khóa học",
     dictionary: "Từ điển",
     tutorials: "Hướng dẫn",
+    resources: "Tài nguyên",
   },
   lessons: {
     duration: "Thời lượng",
