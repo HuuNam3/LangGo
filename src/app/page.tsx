@@ -5,18 +5,19 @@ import { LessonSection } from "@/components/common/LessonSection"
 import { Footer } from "@/components/common/Footer"
 import { useEffect, useState } from "react"
 import Loading from "@/components/common/Loading"
-import { ICourse } from "@/types/lessons"
+import { ICourseCatygory } from "@/types/database"
 
 export default function Home() {
-  const [courses, setCourses] = useState<ICourse[]>([])
+  const [coursesCategory, setCoursesCategory] = useState<ICourseCatygory[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch('/api/courses')
+        const response = await fetch('/api/course_categories')
         const data = await response.json()
-        setCourses(data)
+        setCoursesCategory(data)
+        console.log(data)
       } catch (error) {
         console.error('Failed to fetch courses:', error)
       } finally {
@@ -39,12 +40,12 @@ export default function Home() {
             {isLoading ? (
               <Loading/>
             ) : (
-              courses.map((course, index) => (
+              coursesCategory.map((course, index) => (
                 <LessonSection
                   key={course._id}
                   title={course.title}
+                  course={course.courses}
                   description={course.description}
-                  lessons={course.lessons}
                   accentColor={
                     index === 0 ? "from-pink-500 to-orange-500" :
                     index === 1 ? "from-violet-500 to-fuchsia-500" :

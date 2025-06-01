@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Facebook } from "lucide-react"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { loginSchema } from "@/lib/schemas"
+import { toast } from "sonner"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -44,15 +45,17 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError("Invalid credentials")
+        toast.error("Login failed 😢")
         setIsLoading(false)
         return
       }
-
+      toast.success("login success 🎉")
       router.push(callbackUrl)
       router.refresh()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("Something went wrong. Please try again.")
+      toast.error("Login failed 😢")
       setIsLoading(false)
     }
   }
@@ -62,10 +65,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-accent to-background px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex w-full min-h-screen items-center justify-center bg-gradient-to-br from-accent to-background px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center mt-6">Welcome back</CardTitle>
           <CardDescription className="text-center">Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -134,9 +137,9 @@ export default function LoginPage() {
                   <FormItem>
                     <div className="flex items-center justify-between">
                       <FormLabel>Password</FormLabel>
-                      <Link href="/forgot-password" className="text-sm font-medium text-primary hover:underline">
+                      <p className="text-sm font-medium text-primary hover:underline cursor-pointer" onClick={() => {alert("tự nhớ đi cái này chưa làm, đùa thôi liên hệ admin cũng không giải quyết")}}>
                         Forgot password?
-                      </Link>
+                      </p>
                     </div>
                     <FormControl>
                       <Input type="password" {...field} />

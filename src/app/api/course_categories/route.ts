@@ -5,13 +5,24 @@ import { getDb } from '@/lib/mongodb'
 export async function GET() {
   try {
     const db = await getDb()
-    const lessons = await db.collection('lessons').find({}).toArray()
     
-    return NextResponse.json(lessons)
+    const pipeline = [
+      {
+        $lookup: {
+          from: "courses",
+          localField: "_id",
+          foreignField: "course_categories_id",
+          as: "courses"
+        }
+      }
+    ]
+    
+    const combinedData = await db.collection('course_categories').aggregate(pipeline).toArray()
+    return NextResponse.json(combinedData)
   } catch (error) {
-    console.error('GET lessons error:', error)
+    console.error('GET courses error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch lessons' },
+      { error: 'Failed to fetch courses' },
       { status: 500 }
     )
   }
@@ -21,7 +32,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const db = await getDb()
-    const lessons = db.collection('lessons')
+    const lessons = db.collection('courses')
 
     // Check for existing lesson ID
     const existingLesson = await lessons.findOne({ id: body.id })
@@ -51,7 +62,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-    const result = await put('lessons', body._id, body)
+    const result = await put('courses', body._id, body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('PUT lesson error:', error)
@@ -65,7 +76,7 @@ export async function PUT(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json()
-    const result = await patch('lessons', body._id, body)
+    const result = await patch('courses', body._id, body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('PATCH lesson error:', error)
@@ -79,7 +90,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const body = await request.json()
-    const result = await del('lessons', body)
+    const result = await del('courses', body)
     return NextResponse.json(result)
   } catch (error) {
     console.error('DELETE lesson error:', error)

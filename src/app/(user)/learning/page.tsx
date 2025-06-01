@@ -1,21 +1,18 @@
 // "use client"
 
-// import { useState } from "react"
+// import { useState,use, useEffect } from "react"
 // import { Button } from "@/components/ui/button"
 // import { Card } from "@/components/ui/card"
-// import { Progress } from "@/components/ui/progress"
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// import { Tabs, TabsContent } from "@/components/ui/tabs"
 // import { Textarea } from "@/components/ui/textarea"
 // import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 // import { Label } from "@/components/ui/label"
 // import Image from "next/image"
-// import { PronunciationButton } from "@/components/ui/pronunciation-button"
 // import {
 //   ChevronLeft,
 //   Volume2,
 //   BookOpen,
 //   CheckCircle,
-//   PlayCircle,
 //   Star,
 //   Camera,
 //   Upload,
@@ -25,44 +22,98 @@
 //   PenTool,
 //   Send,
 // } from "lucide-react"
+// import { PronunciationButton } from "@/components/ui/pronunciation-button"
+// import Loading from "@/components/common/Loading"
+// import { ICourse } from "@/types/database"
+// import { useParams } from "next/navigation"
+// import VideoLesson from "@/components/lesson/video-lesson"
 
-// type Props = {
-//   params: { slug: string }
-// }
-
-// export default function LessonPage({ params }: Props) {
-//   // State to track the active tab
-//   console.log(params)
+// export default function LearningPage() {
+//   const params = useParams()
+//   const slug = typeof params.slug === "string" ? params.slug : ""
+//   const [lesson, setLesson] = useState<ICourse>()
+//   const [loadingInfo, setLoadingInfo] = useState(true)
 //   const [activeTab, setActiveTab] = useState("introduction")
+
+//   const [completedSections, setCompletedSections] = useState({
+//     introduction: false,
+//     videoLesson: false,
+//     writtenLesson: false,
+//     questions: false,
+//     writing: false,
+//   })
 
 //   // Function to handle tab changes
 //   const handleTabChange = (value: string) => {
-//     setActiveTab(value)
+//     if (isTabAccessible(value)) {
+//       setActiveTab(value)
+//     }
 //   }
 
 //   // Function to navigate to the next tab
 //   const goToNextTab = () => {
-//     if (activeTab === "introduction") setActiveTab("videoLesson")
-//     else if (activeTab === "videoLesson") setActiveTab("writtenLesson")
-//     else if (activeTab === "writtenLesson") setActiveTab("questions")
-//     else if (activeTab === "questions") setActiveTab("writing")
+//     if (activeTab === "introduction") {
+//       setCompletedSections((prev) => ({ ...prev, introduction: true }))
+//       setActiveTab("videoLesson")
+//     } else if (activeTab === "videoLesson") {
+//       setCompletedSections((prev) => ({ ...prev, videoLesson: true }))
+//       setActiveTab("questions")
+//     } else if (activeTab === "questions") {
+//       setCompletedSections((prev) => ({ ...prev, questions: true }))
+//       setActiveTab("writtenLesson")
+//     } else if (activeTab === "writtenLesson") {
+//       setCompletedSections((prev) => ({ ...prev, writtenLesson: true }))
+//       setActiveTab("writing")
+//     }
 //   }
 
 //   // Function to navigate to the previous tab
 //   const goToPreviousTab = () => {
 //     if (activeTab === "videoLesson") setActiveTab("introduction")
-//     else if (activeTab === "writtenLesson") setActiveTab("videoLesson")
-//     else if (activeTab === "questions") setActiveTab("writtenLesson")
-//     else if (activeTab === "writing") setActiveTab("questions")
+//     else if (activeTab === "questions") setActiveTab("videoLesson")
+//     else if (activeTab === "writtenLesson") setActiveTab("questions")
+//     else if (activeTab === "writing") setActiveTab("writtenLesson")
 //   }
+
+//   const isTabAccessible = (tabValue: string) => {
+//     switch (tabValue) {
+//       case "introduction":
+//         return true
+//       case "videoLesson":
+//         return completedSections.introduction
+//       case "questions":
+//         return completedSections.videoLesson
+//       case "writtenLesson":
+//         return completedSections.questions
+//       case "writing":
+//         return completedSections.writtenLesson
+//       default:
+//         return false
+//     }
+//   }
+
+//   useEffect(() => {
+//     const fetchLesson = async () => {
+//       try {
+//         const res = await fetch(`/api/lessons/${slug}`)
+//         const data = await res.json()
+//         setLesson(data)
+//         console.log(data)
+//         setLoadingInfo(false)
+//       } catch (err) {
+//         console.error("Failed to fetch lesson:", err)
+//       }
+//     }
+
+//     if (slug) fetchLesson()
+//   }, [slug])
 
 //   return (
 //     <div className="min-h-screen bg-white">
-
 //       {/* Main content */}
 //       <main className="mx-auto max-w-5xl px-4 py-8">
 //         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-//           <TabsList className="mb-6 grid w-full grid-cols-5">
+//           {/* <TabsList className="mb-6 grid w-full grid-cols-5">
 //             <TabsTrigger
 //               value="introduction"
 //               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
@@ -71,31 +122,37 @@
 //             </TabsTrigger>
 //             <TabsTrigger
 //               value="videoLesson"
-//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+//               disabled={!isTabAccessible("videoLesson")}
+//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white disabled:opacity-50 disabled:cursor-not-allowed"
 //             >
 //               Video Lesson
 //             </TabsTrigger>
 //             <TabsTrigger
-//               value="content"
-//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
-//             >
-//               Content
-//             </TabsTrigger>
-//             <TabsTrigger
 //               value="questions"
-//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+//               disabled={!isTabAccessible("questions")}
+//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white disabled:opacity-50 disabled:cursor-not-allowed"
 //             >
 //               Questions
 //             </TabsTrigger>
 //             <TabsTrigger
+//               value="writtenLesson"
+//               disabled={!isTabAccessible("writtenLesson")}
+//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+//             >
+//               Written Lesson
+//             </TabsTrigger>
+//             <TabsTrigger
 //               value="writing"
-//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white"
+//               disabled={!isTabAccessible("writing")}
+//               className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-500 data-[state=active]:text-white disabled:opacity-50 disabled:cursor-not-allowed"
 //             >
 //               Writing Practice
 //             </TabsTrigger>
-//           </TabsList>
+//           </TabsList> */}
 
 //           {/* Introduction Tab */}
+//           {loadingInfo ? <Loading/> : (
+
 //           <TabsContent value="introduction">
 //             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
 //               {/* Left sidebar */}
@@ -125,7 +182,7 @@
 //                       </div>
 //                       <div>
 //                         <p className="text-sm text-gray-500">Duration</p>
-//                         <p className="font-medium">30 minutes</p>
+//                         <p className="font-medium">{lesson.duration} minutes</p>
 //                       </div>
 //                     </div>
 
@@ -135,27 +192,27 @@
 //                       </div>
 //                       <div>
 //                         <p className="text-sm text-gray-500">Course</p>
-//                         <p className="font-medium">Tiếng Anh cho người mới bắt đầu</p>
+//                         <p className="font-medium">{lesson.course_name}</p>
 //                       </div>
 //                     </div>
 
 //                     <div className="flex items-center gap-3">
 //                       <div className="rounded-full bg-pink-100 p-2 text-pink-600">
-//                         <Info className="h-5 w-5" />
+//                         <BookOpen className="h-5 w-5" />
 //                       </div>
 //                       <div>
 //                         <p className="text-sm text-gray-500">Lesson</p>
-//                         <p className="font-medium">chào hỏi cơ bản</p>
+//                         <p className="font-medium">{lesson.name}</p>
 //                       </div>
 //                     </div>
 
 //                     <div className="flex items-center gap-3">
-//                       <div className="rounded-full bg-pink-100 p-2 text-pink-600">
-//                         <Info className="h-5 w-5" />
+//                       <div className="rounded-full bg-purple-100 p-2 text-purple-600">
+//                         <FileText className="h-5 w-5" />
 //                       </div>
 //                       <div>
 //                         <p className="text-sm text-gray-500">Lesson Number</p>
-//                         <p className="font-medium">1 of 5</p>
+//                         <p className="font-medium">{lesson.order} of 5</p>
 //                       </div>
 //                     </div>
 
@@ -165,7 +222,7 @@
 //                       </div>
 //                       <div>
 //                         <p className="text-sm text-gray-500">Level</p>
-//                         <p className="font-medium">Beginner</p>
+//                         <p className="font-medium">{lesson.level}</p>
 //                       </div>
 //                     </div>
 //                   </div>
@@ -182,60 +239,34 @@
 //                   <div className="p-6">
 //                     <div className="mb-6 aspect-video overflow-hidden rounded-lg bg-gray-100">
 //                       <Image
-//                         src="/images/basic-en.jpg"
-//                         alt="Lesson Introduction"
+//                         src={lesson.thumbnail}
+//                         alt={lesson.name}
 //                         width={600}
 //                         height={300}
 //                         className="h-full w-full object-contain"
 //                       />
-//                       {/* <div className="absolute inset-0 flex items-center justify-center">
-//                         <Button className="rounded-full bg-white/80 p-3 text-purple-600 hover:bg-white">
-//                           <PlayCircle className="h-10 w-10" />
-//                         </Button>
-//                       </div> */}
 //                     </div>
 
 //                     <div className="mb-6 rounded-lg bg-purple-50 p-4">
 //                       <h3 className="mb-2 text-lg font-semibold text-purple-800">About This Lesson</h3>
-//                       <p className="text-gray-700">
-//                         Welcome to &ldquo;Daily Greetings &amp; Phrases&rdquo; - an essential lesson for anyone beginning their Mandarin
-//                         learning journey. In this lesson, you&apos;ll learn how to greet people in different situations and
-//                         times of day, introduce yourself, and engage in basic conversations.
-//                       </p>
+//                       <p className="text-gray-700">{lesson.description}</p>
 //                     </div>
 
 //                     <div className="mb-6">
 //                       <h3 className="mb-3 text-lg font-semibold">What You&apos;ll Learn</h3>
 //                       <ul className="space-y-2">
-//                         <li className="flex items-start gap-2">
+//                         {lesson.you_learn.map((item,idx) => 
+//                           <li key={idx} className="flex items-start gap-2">
 //                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
-//                           <span>Common greetings for different times of day</span>
+//                           <span>{item}</span>
 //                         </li>
-//                         <li className="flex items-start gap-2">
-//                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
-//                           <span>How to introduce yourself in Mandarin</span>
-//                         </li>
-//                         <li className="flex items-start gap-2">
-//                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
-//                           <span>Basic conversation starters</span>
-//                         </li>
-//                         <li className="flex items-start gap-2">
-//                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
-//                           <span>Proper pronunciation of common phrases</span>
-//                         </li>
-//                         <li className="flex items-start gap-2">
-//                           <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
-//                           <span>Cultural context for Chinese greetings</span>
-//                         </li>
+//                         )}
 //                       </ul>
 //                     </div>
 
 //                     <div className="mb-6">
 //                       <h3 className="mb-3 text-lg font-semibold">Prerequisites</h3>
-//                       <p className="text-gray-700">
-//                         This lesson assumes you have completed &ldquo;Basic Mandarin Pronunciation&rdquo; (Lesson 1) and have a
-//                         basic understanding of Mandarin tones. No other prior knowledge is required.
-//                       </p>
+//                       <p className="text-gray-700">{lesson.prerequisites}</p>
 //                     </div>
 
 //                     <div className="flex justify-end">
@@ -252,47 +283,110 @@
 //               </div>
 //             </div>
 //           </TabsContent>
+//           )}
 
-//           {/* Lesson Content Tab */}
-//           <TabsContent value="content">
+//           {/* Video Lesson Tab */}
+//           <TabsContent value="videoLesson">
+//             <VideoLesson/>
+//             {/* <Card className="overflow-hidden">
+//               <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
+//                 <h2 className="text-xl font-bold">Video Lesson</h2>
+//               </div>
+
+//               <div className="p-6">
+//                 <div className="mb-6 rounded-lg bg-purple-50 p-4">
+//                   <div className="flex items-start gap-3">
+//                     <PlayCircle className="mt-0.5 h-5 w-5 text-purple-600" />
+//                     <div>
+//                       <p className="font-medium text-purple-800">Watch and Learn</p>
+//                       <p className="text-gray-700">
+//                         Watch the video lesson to learn proper pronunciation and see the greetings used in context.
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="mb-8 aspect-video overflow-hidden rounded-lg bg-gray-100">
+//                   <div className="relative h-full w-full">
+//                     <Image
+//                       src="/placeholder.svg?height=480&width=854"
+//                       alt="Video Lesson"
+//                       width={854}
+//                       height={480}
+//                       className="h-full w-full object-cover"
+//                     />
+//                     <div className="absolute inset-0 flex items-center justify-center">
+//                       <Button className="rounded-full bg-white/80 p-3 text-purple-600 hover:bg-white">
+//                         <PlayCircle className="h-10 w-10" />
+//                       </Button>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="space-y-6">
+//                   <div className="rounded-lg border border-gray-200 p-4">
+//                     <h3 className="mb-3 text-lg font-semibold">Video Transcript</h3>
+//                     <div className="space-y-4 text-gray-700">
+//                       <p>
+//                         <span className="font-medium">0:00</span> - Introduction to basic greetings in Mandarin
+//                       </p>
+//                       <p>
+//                         <span className="font-medium">0:45</span> - How to say &quot;Hello&quot; (你好 / Nǐ hǎo) with proper
+//                         pronunciation
+//                       </p>
+//                       <p>
+//                         <span className="font-medium">1:30</span> - Morning greetings (早上好 / Zǎoshang hǎo) and when
+//                         to use them
+//                       </p>
+//                       <p>
+//                         <span className="font-medium">2:15</span> - Evening greetings (晚上好 / Wǎnshang hǎo) with
+//                         examples
+//                       </p>
+//                       <p>
+//                         <span className="font-medium">3:00</span> - How to say &quot;Goodbye&quot; (再见 / Zàijiàn) and other
+//                         parting phrases
+//                       </p>
+//                       <p>
+//                         <span className="font-medium">4:30</span> - Practice dialogue with all the greetings
+//                       </p>
+//                     </div>
+//                   </div>
+
+//                   <div className="rounded-lg border border-gray-200 p-4">
+//                     <h3 className="mb-3 text-lg font-semibold">Key Points from the Video</h3>
+//                     <ul className="list-inside list-disc space-y-2 text-gray-700">
+//                       <li>
+//                         Pay attention to the tones when saying &quot;你好&quot; (Nǐ hǎo) - third tone followed by third tone
+//                       </li>
+//                       <li>In casual settings, you can simply say &quot;你好&quot; (Nǐ hǎo) regardless of the time of day</li>
+//                       <li>The greeting &quot;你吃饭了吗?&quot; (Nǐ chīfàn le ma?) is a common conversation starter</li>
+//                       <li>When saying goodbye, &quot;再见&quot; (Zàijiàn) is appropriate in most situations</li>
+//                     </ul>
+//                   </div>
+//                 </div>
+
+//                 <div className="mt-8 flex justify-between">
+//                   <Button onClick={goToPreviousTab} variant="outline" className="gap-2">
+//                     <ChevronLeft className="h-4 w-4" />
+//                     Previous
+//                   </Button>
+//                   <Button
+//                     onClick={goToNextTab}
+//                     className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600"
+//                   >
+//                     Next
+//                     <ChevronLeft className="h-4 w-4 rotate-180" />
+//                   </Button>
+//                 </div>
+//               </div>
+//             </Card> */}
+//           </TabsContent>
+
+//           {/* Written Lesson Tab */}
+//           <TabsContent value="writtenLesson">
 //             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
 //               {/* Left sidebar */}
 //               <div className="space-y-6 md:col-span-1">
-//                 <Card>
-//                   <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
-//                     <h2 className="text-xl font-bold">Lesson Progress</h2>
-//                   </div>
-//                   <div className="p-4">
-//                     <div className="mb-4 flex items-center justify-between">
-//                       <span className="font-medium">Completion</span>
-//                       <span className="text-sm font-medium text-purple-600">25%</span>
-//                     </div>
-//                     <Progress value={25} className="mb-6 h-2 bg-gray-100" />
-
-//                     <div className="space-y-3">
-//                       <div className="flex items-center gap-3">
-//                         <CheckCircle className="h-5 w-5 text-green-500" />
-//                         <span>Introduction</span>
-//                       </div>
-//                       <div className="flex items-center gap-3">
-//                         <PlayCircle className="h-5 w-5 text-purple-500" />
-//                         <span className="font-medium text-purple-600">Basic Greetings</span>
-//                       </div>
-//                       <div className="flex items-center gap-3 text-gray-400">
-//                         <div className="rounded-full border-2 border-gray-300 p-0.5">
-//                           <div className="h-3 w-3 rounded-full" />
-//                         </div>
-//                         <span>Common Phrases</span>
-//                       </div>
-//                       <div className="flex items-center gap-3 text-gray-400">
-//                         <div className="rounded-full border-2 border-gray-300 p-0.5">
-//                           <div className="h-3 w-3 rounded-full" />
-//                         </div>
-//                         <span>Practice Exercise</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                 </Card>
 
 //                 <Card className="overflow-hidden">
 //                   <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-4 text-white">
@@ -514,7 +608,9 @@
 
 //                   {/* Question 2 */}
 //                   <div className="rounded-lg border border-gray-200 p-5">
-//                     <h3 className="mb-4 text-lg font-semibold">2. When would you use &ldquo;早上好&rdquo; (Zǎoshang hǎo)?</h3>
+//                     <h3 className="mb-4 text-lg font-semibold">
+//                       2. When would you use &ldquo;早上好&rdquo; (Zǎoshang hǎo)?
+//                     </h3>
 //                     <RadioGroup defaultValue="option-1">
 //                       <div className="space-y-3">
 //                         <div className="flex items-center space-x-2">
@@ -539,7 +635,9 @@
 
 //                   {/* Question 3 */}
 //                   <div className="rounded-lg border border-gray-200 p-5">
-//                     <h3 className="mb-4 text-lg font-semibold">3. What does &ldquo;你吃饭了吗?&rdquo; (Nǐ chīfàn le ma?) mean?</h3>
+//                     <h3 className="mb-4 text-lg font-semibold">
+//                       3. What does &ldquo;你吃饭了吗?&rdquo; (Nǐ chīfàn le ma?) mean?
+//                     </h3>
 //                     <RadioGroup defaultValue="option-1">
 //                       <div className="space-y-3">
 //                         <div className="flex items-center space-x-2">
@@ -768,6 +866,7 @@
 //     </div>
 //   )
 // }
+
 import React from 'react'
 
 export default function page() {

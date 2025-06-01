@@ -6,16 +6,16 @@ import { Clock, User } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { ILesson } from "@/types/lessons"  
+import { ICourse } from "@/types/database"  
 
 interface LessonSectionProps {
   title: string
   description: string
-  lessons: ILesson[]
+  course: ICourse[]
   accentColor: string
 }
 
-export function LessonSection({ title, description, lessons, accentColor }: LessonSectionProps) {
+export function LessonSection({ title, description, course, accentColor }: LessonSectionProps) {
   return (
     <section className="space-y-6">
       <div className="space-y-2">
@@ -23,23 +23,23 @@ export function LessonSection({ title, description, lessons, accentColor }: Less
         <p className="text-muted-foreground">{description}</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        {lessons.map((lesson: ILesson) => (
-          <Link key={lesson._id} href={`/lessons/${lesson._id}`}>
-            <Card className="group relative p-0 pb-6 overflow-hidden bg-[#f7f7f7] hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+        {course.map((lesson: ICourse) => (
+          <Link key={lesson._id} href={`/courses/${lesson.slug}`}>
+            <Card className="group relative overflow-hidden bg-[#f7f7f7] hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
               <div className="relative h-48 overflow-hidden">
                 <div className={cn(
                   "absolute inset-0 bg-gradient-to-br opacity-10 group-hover:opacity-20 transition-opacity duration-300",
                   accentColor
                 )} />
                 <Image
-                  src={lesson.image}
-                  alt={lesson.title}
+                  src={lesson.thumbnail || "/images/basic-en.jpg"}
+                  alt={lesson.name}
                   fill
                   className="object-cover"
                 />
               </div>
               <CardHeader className="relative z-10">
-                <h3 className="font-semibold min-h-12 max-h-12 line-clamp-2 group-hover:text-primary transition-colors duration-300">{lesson.title}</h3>
+                <h3 className="font-semibold min-h-12 max-h-12 line-clamp-2 group-hover:text-primary transition-colors duration-300">{lesson.name}</h3>
               </CardHeader>
               <CardContent className="space-y-2 relative z-10">
                 <div className="flex items-center text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-300">

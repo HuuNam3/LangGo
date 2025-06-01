@@ -18,7 +18,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "./ThemeToggle"
-import { useSession, signOut } from "next-auth/react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,13 +29,12 @@ import { LanguageSwitcher } from "./LanguageSwitcher"
 import { useLanguage } from "@/lib/i18n/LanguageContext"
 import { LoadingSpinner } from "./LoadingSpinner"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useAuth } from "@/contexts/AuthContext"
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false)
-  const { data: session, status } = useSession()
-  const { t, isLoading: languageLoading } = useLanguage()
-
-  const isLoading = status === "loading" || languageLoading
+  const { t } = useLanguage()
+  const { user: userData, isLoading, logout} = useAuth();
 
   if (isLoading) {
     return (
@@ -120,22 +118,22 @@ export function Header() {
 
             {isLoading ? (
               <LoadingSpinner size="sm" />
-            ) : session ? (
+            ) : userData ? (
               <div className="relative">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                      <AvatarImage src={(session.user?.avatar || "/placeholder.svg") as string} alt={session.user?.name || ""} />
+                      <AvatarImage src="/images/avatar.png" alt={userData.name || ""} />
                       <AvatarFallback className="bg-violet-700 text-white">
-                        {session?.user?.name?.slice(0, 1).toUpperCase()}
+                        {userData.name?.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        {session.user?.name && <p className="font-medium">{session.user.name}</p>}
-                        {session.user?.email && <p className="text-sm text-muted-foreground">{session.user.email}</p>}
+                        {userData.name && <p className="font-medium">{userData.name}</p>}
+                        {userData.email && <p className="text-sm text-muted-foreground">{userData.email}</p>}
                       </div>
                     </div>
                     <DropdownMenuSeparator />
@@ -147,7 +145,7 @@ export function Header() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      onClick={() => signOut()}
+                      onClick={() => logout()}
                       className="cursor-pointer text-red-500 focus:text-red-500"
                     >
                       <User className="mr-2 h-4 w-4" />
@@ -192,22 +190,22 @@ export function Header() {
 
         {isLoading ? (
           <LoadingSpinner size="sm"/>
-        ) : session ? (
+        ) : userData ? (
           <div className="relative">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                  <AvatarImage src={(session.user?.avatar || "/placeholder.svg") as string} alt={session.user?.name || ""} />
+                  <AvatarImage src="/images/avatar.png" alt={userData.name || ""} />
                   <AvatarFallback className="bg-violet-700 text-white">
-                    {session?.user?.name?.slice(0, 2).toUpperCase()}
+                    {userData.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    {session.user?.name && <p className="font-medium">{session.user.name}</p>}
-                    {session.user?.email && <p className="text-sm text-muted-foreground">{session.user.email}</p>}
+                    {userData.name && <p className="font-medium">{userData.name}</p>}
+                    {userData.email && <p className="text-sm text-muted-foreground">{userData.email}</p>}
                   </div>
                 </div>
                 <DropdownMenuSeparator />
@@ -218,7 +216,7 @@ export function Header() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500 focus:text-red-500">
+                <DropdownMenuItem onClick={() => logout()} className="cursor-pointer text-red-500 focus:text-red-500">
                   <User className="mr-2 h-4 w-4" />
                   <span>{t.header.logout}</span>
                 </DropdownMenuItem>
@@ -257,7 +255,7 @@ export function Header() {
                 {t.header.notifications}
                 {55 > 0 && <Badge className="bg-red-500 ml-2">{55}</Badge>}
               </Link>
-              {!session && (
+              {!userData && (
                 <Link
                   href="/login"
                   className="text-lg font-medium hover:text-violet-500 transition-colors flex items-center gap-2"

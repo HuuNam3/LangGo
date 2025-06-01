@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     const db = await getDb()
-    const users = db.collection('users')
+    const users = db.collection('user_accounts')
 
     // Check if user already exists (by email)
     const existingEmail = await users.findOne({ email })
@@ -38,7 +38,6 @@ export async function POST(request: Request) {
       password: hashedPassword,
       name,
       username,
-      avatar: "/images/avatar.png", // Default avatar
       createdAt: new Date()
     }
 

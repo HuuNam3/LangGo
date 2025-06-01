@@ -9,7 +9,6 @@ import { getDb } from "@/lib/mongodb"
 // Extend User type
 interface ExtendedUser extends User {
   username?: string;
-  avatar?: string;
 }
 
 // Extend Session type
@@ -18,14 +17,12 @@ interface ExtendedSession extends Session {
   user: {
     id: string;
     username?: string;
-    avatar?: string;
   } & DefaultSession["user"];
 }
 
 // Extend JWT type
 interface ExtendedToken extends JWT {
   username?: string;
-  avatar?: string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -51,12 +48,10 @@ export const authOptions: NextAuthOptions = {
 
         try {
           const db = await getDb()
-          const users = db.collection('users')
+          const users = db.collection('user_accounts')
 
-          // Check if the input is an email or username
           const isEmail = credentials.emailOrUsername.includes("@")
 
-          // Find user by email or username
           const user = await users.findOne(
             isEmail 
               ? { email: credentials.emailOrUsername }
@@ -77,7 +72,6 @@ export const authOptions: NextAuthOptions = {
             id: user._id.toString(),
             email: user.email,
             name: user.name,
-            avatar: user.avatar,
             username: user.username,
           } as ExtendedUser
         } catch (error) {
@@ -97,7 +91,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.username = user.username
-        token.avatar = user.avatar
       }
       if (account) {
         token.provider = account.provider
@@ -111,7 +104,6 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           username: (token as ExtendedToken).username,
-          avatar: (token as ExtendedToken).avatar,
         },
         provider: (token as ExtendedToken).provider,
       } as ExtendedSession
@@ -135,11 +127,9 @@ export async function register(formData: FormData) {
   }
 
   try {
-    // Hash password
     const hashedPassword = await hash(password, 10)
 
-    // Create user using API endpoint
-    const response = await fetch('/api/users', {
+    const response = await fetch('/api/user_accounts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -149,7 +139,6 @@ export async function register(formData: FormData) {
         password: hashedPassword,
         name,
         username,
-        avatar: "/images/avatar.png", // Default avatar
         createdAt: new Date(),
       })
     })
