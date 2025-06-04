@@ -9,12 +9,18 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const protectedPaths = ["/profile"];
+  const protectedPaths = [
+    "/profile",
+    "/lessons/:path*",
+    "/courses/:path*",
+    "/my-courses",
+  ];
+
   const isPathProtected = protectedPaths.some(
-    (path) => pathname === path || pathname.startsWith(`${path}/`)
+    (path) => pathname === path || pathname.startsWith(`${path.split(":")[0]}`)
   );
 
-  if (pathname === "/lessons") {
+  if (pathname === "/lessons" || pathname === "/courses") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -31,7 +37,13 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-
 export const config = {
-  matcher: ["/login", "/register", "/profile", "/lessons/:path*"],
+  matcher: [
+    "/login",
+    "/register",
+    "/profile",
+    "/lessons/:path*",
+    "/courses/:path*",
+    "/my-courses",
+  ],
 };

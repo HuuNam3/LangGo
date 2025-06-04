@@ -1,9 +1,13 @@
-import * as z from "zod"
+import * as z from "zod";
 
 export const loginSchema = z.object({
-  emailOrUsername: z.string().min(3, { message: "Please enter a valid email or username" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-})
+  emailOrUsername: z
+    .string()
+    .min(3, { message: "Please enter a valid email or username" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+});
 
 export const registerSchema = z
   .object({
@@ -11,12 +15,25 @@ export const registerSchema = z
     username: z
       .string()
       .min(3, { message: "Username must be at least 3 characters" })
-      .regex(/^[a-zA-Z0-9_]+$/, { message: "Username can only contain letters, numbers, and underscores" }),
+      .regex(/^[a-zA-Z0-9_]+$/, {
+        message: "Username can only contain letters, numbers, and underscores",
+      }),
     email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
+    avatarUrl: z.string(),
+    bio: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  })
+  });
+
+export const enrollmentSchema = z.object({
+  user_id: z.string(),
+  course_id: z.string(),
+  enrolled_at: z.string(),
+  progress: z.number().min(0),
+});

@@ -28,12 +28,14 @@ export default function RegisterPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      avatarUrl: "/images/avatar.png",
+      bio: "",
     },
   })
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
     setIsLoading(true)
-    setError("")  // Clear any previous errors
+    setError("") // Clear any previous errors
 
     try {
       const formData = new FormData()
@@ -41,6 +43,8 @@ export default function RegisterPage() {
       formData.append("username", values.username)
       formData.append("email", values.email)
       formData.append("password", values.password)
+      formData.append("avatarUrl", values.avatarUrl)
+      formData.append("bio", values.bio)
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -186,13 +190,14 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
+              {/* Không cần hiển thị avatarUrl và bio trong UI vì chúng là giá trị mặc định */}
               <Button type="submit" className="w-full auth-gradient hover:opacity-90" disabled={isLoading}>
                 {isLoading ? "Creating account..." : "Register"}
               </Button>
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex justify-center">
+        <CardFooter className="flex  justify-center">
           <p className="text-sm text-center text-muted-foreground">
             Already have an account?{" "}
             <Link href="/login" className="font-medium text-primary hover:underline">

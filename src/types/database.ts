@@ -13,8 +13,11 @@ export interface IUserAccounts {
 
 export interface IUserInformation {
   _id: string;
-  userId: string; 
+  userId: string;
+  name:string;
   avatarUrl?: string;
+  bio?:string;
+  joined: Date;
   birthday?: Date;
   gender?: Gender;
   phoneNumber?: string;
@@ -37,6 +40,7 @@ export interface ICourse {
     _id: string;
     name: string;
     thumbnail: string;
+    studied: string;
     // instructor: IAccountUser;
     instructor: string;
     language: string;
@@ -49,6 +53,17 @@ export interface ICourse {
     order: string;
     createdAt: Date;
     updatedAt: Date;
+}
+
+export interface IMyCourses {
+  _id: string;
+  user_id: string;
+  course_id: string;
+  course: ICourse; 
+  enrolled_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  progress: number;
 }
 
 export interface ICourseCatygory {

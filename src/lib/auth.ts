@@ -2,6 +2,7 @@ import NextAuth, { NextAuthOptions, User, Account, Session, DefaultSession } fro
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
+import { getServerSession as getSession } from "next-auth"
 import { compare, hash } from "bcrypt"
 import { JWT } from "next-auth/jwt"
 import { getDb } from "@/lib/mongodb"
@@ -157,6 +158,10 @@ export async function register(formData: FormData) {
     console.error("Error in register:", error)
     return { error: "Failed to create user" }
   }
+}
+
+export function getServerSession() {
+  return getSession(authOptions)
 }
 
 const handler = NextAuth(authOptions)

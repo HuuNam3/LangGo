@@ -40,17 +40,12 @@ export default function Home() {
             {isLoading ? (
               <Loading/>
             ) : (
-              coursesCategory.map((course, index) => (
+              coursesCategory.map((course) => (
                 <LessonSection
                   key={course._id}
                   title={course.title}
                   course={course.courses}
                   description={course.description}
-                  accentColor={
-                    index === 0 ? "from-pink-500 to-orange-500" :
-                    index === 1 ? "from-violet-500 to-fuchsia-500" :
-                    "from-blue-500 to-cyan-500"
-                  }
                 />
               ))
             )} 
