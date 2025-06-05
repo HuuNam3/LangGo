@@ -19,33 +19,34 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import { countCourses, countLessonCompleted } from "@/lib/queries";
+dayjs.extend(customParseFormat);
 
 export function Profile() {
   const [profileData, setProfileData] = useState<IUserInformation>();
-  const { user: userData } = useAuth();
+  const [coursesEnrolled, setcoursesEnrolled] = useState(0);
+  const [lessonsCompleted, setLessonsCompleted] = useState(0);
 
   useEffect(() => {
     const fetchLesson = async () => {
       try {
-        if (!userData?.id) return;
-
-        const res = await fetch(`/api/profile`, {
-          headers: {
-            "user-id": userData?.id,
-          },
-        });
-
+        const res = await fetch(`/api/profile`);
         const data = await res.json();
+        const result = await countCourses();
+        const query1 = await countLessonCompleted();
+
+        setcoursesEnrolled(result);
+        setLessonsCompleted(query1)
         setProfileData(data);
         console.log(data);
       } catch (err) {
         console.error("Failed to fetch lesson:", err);
       }
     };
-
     fetchLesson();
-  }, [userData?.id]);
+  }, []);
 
   const recentActivity = [
     {
@@ -69,6 +70,18 @@ export function Profile() {
       time: "3 days ago",
     },
   ];
+
+  const getDaysAttended = (): number => {
+    if (profileData) {
+      const joinedDate = dayjs(
+        new Date(profileData.joined).toLocaleDateString(),
+        "D/M/YYYY"
+      );
+      const today = dayjs().startOf("day");
+      return today.diff(joinedDate, "day");
+    }
+    return 0;
+  };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -114,7 +127,9 @@ export function Profile() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card>
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-indigo-600">89</div>
+                  <div className="text-2xl font-bold text-indigo-600">
+                    {getDaysAttended()}
+                  </div>
                   <div className="text-sm text-muted-foreground">
                     Days Attended
                   </div>
@@ -122,7 +137,9 @@ export function Profile() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-purple-600">47</div>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {lessonsCompleted}
+                  </div>
                   <div className="text-sm text-muted-foreground">
                     Lessons Completed
                   </div>
@@ -130,7 +147,7 @@ export function Profile() {
               </Card>
               <Card>
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-green-600">3</div>
+                  <div className="text-2xl font-bold text-green-600">{coursesEnrolled}</div>
                   <div className="text-sm text-muted-foreground">
                     Courses Enrolled
                   </div>
@@ -140,7 +157,7 @@ export function Profile() {
             <Card className="py-4">
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your learning journey</CardDescription>
+                <CardDescription>Your learning journey (đây là dữ liệu mẫu)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {recentActivity.map((activity, index) => (

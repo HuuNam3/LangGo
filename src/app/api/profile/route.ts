@@ -1,15 +1,17 @@
-import { NextResponse, NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { put, patch, del } from '@/lib/actions'
 import { getDb } from '@/lib/mongodb'
 import { ObjectId } from "mongodb";
+import { authOptions } from "@/lib/auth"
+import { getServerSession } from "next-auth"
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const userId = req.headers.get("user-id");
-
-    if (!userId || !ObjectId.isValid(userId)) {
-      return NextResponse.json({ error: "Invalid or missing user-id" }, { status: 400 });
-    }
+    const session = await getServerSession(authOptions)
+      if (!session?.user?.id) {
+        throw new Error("Unauthorized")
+      }
+    const userId = session.user.id
 
     const db = await getDb();
 

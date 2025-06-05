@@ -10,6 +10,7 @@ if (!process.env.MONGODB_DB) {
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB;
+let cachedDb: ReturnType<MongoClient['db']> | null = null
 
 const options = {
   serverApi: {
@@ -41,11 +42,14 @@ try {
 
 export async function getDb() {
   try {
-    const client = await clientPromise;
-    return client.db(dbName);
+    if (cachedDb) return cachedDb
+
+    const client = await clientPromise
+    cachedDb = client.db(dbName)
+    return cachedDb
   } catch (error) {
-    console.error('Error getting database:', error);
-    throw error;
+    console.error('Error getting database:', error)
+    throw error
   }
 }
 
