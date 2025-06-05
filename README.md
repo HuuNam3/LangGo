@@ -1,113 +1,126 @@
-# Mandarin Learning
+# LangGo - Language Learning Platform
 
-## Introduction
-Mandarin Learning is a modern web application designed to help users learn Mandarin Chinese effectively. Built with Next.js and React, it offers a responsive, user-friendly interface with multilingual support and structured learning paths.
+LangGo is a modern language learning platform built with Next.js 15, TypeScript, and MongoDB. The platform provides an interactive environment for users to learn languages through structured courses and lessons.
 
-**Project Status**: In Development (Version 0.1.0)
+## 🚀 Features
 
-## Core Features
-- **Multilingual Interface**
-  - Support for English, Chinese (Mandarin), and Vietnamese
-  - Language preference persistence using cookies
-  - Automatic browser language detection
-  - Easy language switching
+- **User Authentication**
+  - Secure login and registration system
+  - Protected routes for authenticated users
+  - Profile management
 
-- **Learning Content**
-  - Structured lesson categories:
-    - Beginner lessons (pronunciation, characters)
-    - HSK test preparation
-    - Practical communication
-  - Professional instructor-led content
-  - Duration-tracked lessons
-  - Difficulty level indicators
+- **Course Management**
+  - Browse available courses
+  - Track learning progress
+  - Personalized course recommendations
 
-- **User System**
-  - Secure authentication with NextAuth.js
-  - User profiles with progress tracking
-  - Achievement system
-  - Course enrollment management
+- **Interactive Lessons**
+  - Structured learning content
+  - Progress tracking
+  - Interactive exercises
 
-## Tech Stack
-### Frontend
-- **Next.js 15.3.0**: React framework for production
-- **React 19**: UI library
-- **Tailwind CSS**: Utility-first styling
-- **Radix UI**: Accessible component primitives
-- **Framer Motion**: Animation library
-- **Lucide React**: Icon system
+- **Modern UI/UX**
+  - Responsive design
+  - Dark/Light theme support
+  - Smooth animations with Framer Motion
+  - Beautiful UI components using Radix UI
 
-### Authentication & State Management
-- **NextAuth.js**: Authentication system
-- **Bcrypt**: Password hashing
-- **js-cookie**: Cookie management
-- **Zod**: Schema validation
+## 🛠️ Tech Stack
 
-### Development Tools
-- **TypeScript**: Type safety
-- **ESLint**: Code linting
-- **React Hook Form**: Form handling
+- **Frontend**
+  - Next.js 15
+  - React 19
+  - TypeScript
+  - Tailwind CSS
+  - Radix UI Components
+  - Framer Motion for animations
 
-## Getting Started
+- **Backend**
+  - Next.js API Routes
+  - MongoDB for database
+  - NextAuth.js for authentication
+  - bcrypt for password hashing
 
-### Prerequisites
-- Node.js (LTS version recommended)
-- npm or yarn package manager
+- **Development Tools**
+  - ESLint for code linting
+  - TypeScript for type safety
+  - Tailwind CSS for styling
 
-### Installation
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/HuuNam3/Mandarin-Learning.git
-   cd mandarin-learning
-   ```
+## 📦 Installation
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup**
-   Create a `.env.local` file in the root directory:
-   ```env
-   NEXTAUTH_SECRET=your_auth_secret
-   NEXTAUTH_URL=http://localhost:3000
-   ```
-
-4. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
-   Access the application at `http://localhost:3000`
-
-## Project Structure
-```
-mandarin-learning/
-├── src/
-│   ├── app/           # Next.js 13+ app directory
-│   ├── components/    # Reusable UI components
-│   └── lib/          # Utilities and data
-│       ├── data/     # Content and user data
-│       └── i18n/     # Internationalization
-├── public/           # Static assets
-└── package.json      # Project dependencies
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd LangGo
 ```
 
-## Available Scripts
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm start`: Run production server
-- `npm run lint`: Run ESLint
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Contributing
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with the following variables:
+```env
+MONGODB_URI=your_mongodb_uri
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+```
+
+4. Run the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`
+
+## 🏗️ Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+│   ├── api/            # API routes
+│   ├── (user)/         # User routes
+│   ├── (admin)/        # Admin routes
+│   └── login/          # Authentication pages
+├── components/         # Reusable UI components
+├── contexts/          # React contexts
+├── hooks/             # Custom React hooks
+├── lib/               # Utility functions and configurations
+└── types/             # TypeScript type definitions
+```
+
+## 🔒 Authentication
+
+The application uses NextAuth.js for authentication with the following features:
+- Protected routes for authenticated users
+- Automatic redirection for unauthenticated users
+- Session management
+- Secure password hashing with bcrypt
+
+## 🎨 UI Components
+
+The project uses a combination of:
+- Radix UI for accessible components
+- Tailwind CSS for styling
+- Framer Motion for animations
+- Custom components for specific functionality
+
+## 📝 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+
+## 🤝 Contributing
+
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## Contact
-- **Developer**: Huu Nam
-- **Email**: nhnam4411@gmail.com
-- **GitHub**: [HuuNam3](https://github.com/HuuNam3)
+## 📄 License
 
-## License
-This project is private and not licensed for public use.
+This project is licensed under the MIT License - see the LICENSE file for details.
