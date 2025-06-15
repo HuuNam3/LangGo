@@ -45,21 +45,31 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions)
+
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    const userId = new ObjectId(session.user.id)
     const body = await request.json()
     const db = await getDb()
     const collection = db.collection("user_courses")
 
-    const { user_id, course_id, enrolled_at, progress } = body
+    const  {course_id, enrolled_at, progress } = body
 
-    if (!user_id || !course_id) {
+    if ( !course_id) {
       return NextResponse.json(
-        { error: "Thiếu user_id hoặc course_id" },
+        { error: "!course_id" },
         { status: 400 }
       )
     }
 
     const result = await collection.insertOne({
-      user_id: new ObjectId(user_id),
+      user_id: userId,
       course_id: new ObjectId(course_id),
       enrolled_at: enrolled_at ? new Date(enrolled_at) : new Date(),
       progress: progress ?? 0,

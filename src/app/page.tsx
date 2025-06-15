@@ -2,9 +2,9 @@
 import { Header } from "@/components/common/Header"
 import { Footer } from "@/components/common/Footer"
 import { HomeBanner } from "@/components/common/HomeBanner"
-import { LessonSection } from "@/components/common/LessonSection"
+import { CoursesSection } from "@/components/common/CoursesSection"
 import { useEffect, useState } from "react"
-import Loading from "@/components/common/Loading"
+import Loading from "@/components/common/LoadingPage"
 import { ICourseCatygory } from "@/types/database"
 
 export default function Home() {
@@ -17,7 +17,6 @@ export default function Home() {
         const response = await fetch('/api/course_categories')
         const data = await response.json()
         setCoursesCategory(data)
-        console.log(data)
       } catch (error) {
         console.error('Failed to fetch courses:', error)
       } finally {
@@ -41,7 +40,7 @@ export default function Home() {
               <Loading/>
             ) : (
               coursesCategory.map((course) => (
-                <LessonSection
+                <CoursesSection
                   key={course._id}
                   title={course.title}
                   course={course.courses}

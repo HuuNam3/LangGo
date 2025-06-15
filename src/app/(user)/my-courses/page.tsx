@@ -11,9 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { IMyCourses } from "@/types/database";
-import Loading from "@/components/common/Loading";
+import Loading from "@/components/common/LoadingPage";
 import CourseCard from "@/components/lesson/course-card";
 import Link from "next/link";
+import LoadingPage from "@/components/common/LoadingPage";
 
 export default function MyCourses() {
   const [myCourses, setMyCourses] = useState<[]>([]);
@@ -25,7 +26,6 @@ export default function MyCourses() {
         const response = await fetch("/api/my-courses");
         const data = await response.json();
         setMyCourses(data);
-        console.log(data);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       } finally {
@@ -35,6 +35,10 @@ export default function MyCourses() {
 
     fetchCourses();
   }, []);
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 w-full">
@@ -91,7 +95,11 @@ export default function MyCourses() {
         ) : myCourses.length === 0 ? (
           <div className="col-span-full text-center text-gray-500 text-lg">
             Chưa có khóa học nào được đăng ký
-            <Link href="/"><span className="ml-2 text-blue-500">quay lại xem các khóa học</span></Link>
+            <Link href="/">
+              <span className="ml-2 text-blue-500">
+                quay lại xem các khóa học
+              </span>
+            </Link>
           </div>
         ) : (
           myCourses.map((item: IMyCourses) => (

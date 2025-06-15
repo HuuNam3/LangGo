@@ -11,15 +11,20 @@ export async function GET(
   if (!slug || typeof slug !== "string") {
     return NextResponse.json({ message: "Invalid slug" }, { status: 400 });
   }
-
   const db = await getDb();
-  const lesson = await db.collection("lessons").findOne({ slug });
 
-  if (!lesson) {
-    return NextResponse.json({ message: "Lesson not found" }, { status: 404 });
+  const courses = await db.collection("courses").findOne({ slug });
+  if (!courses) {
+    return NextResponse.json({ message: "courses not found" }, { status: 404 });
   }
 
-  return NextResponse.json(lesson);
+  const lessons = await db.collection("lessons").find({ course_id:  courses._id}).toArray()
+
+  if (!lessons) {
+    return NextResponse.json({ message: "lessons not found" }, { status: 404 });
+  }
+
+  return NextResponse.json(lessons);
 }
 
 export async function POST(request: Request) {

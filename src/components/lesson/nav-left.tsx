@@ -1,13 +1,12 @@
-"use client"
-import LessonCard from "./lesson-card"
+"use client";
+import { ILesson } from "@/types/database";
+import LessonCard from "./lesson-card";
 
 interface CourseSidebarProps {
-  completedLessons?: number
-  totalLessons?: number
+  lessons: ILesson[];
 }
 
-export default function CourseSidebar({ completedLessons = 0, totalLessons = 3 }: CourseSidebarProps) {
-  const progressPercentage = Math.round((completedLessons / totalLessons) * 100)
+export default function CourseSidebar({ lessons }: CourseSidebarProps) {
 
   return (
     <div className="w-96 h-full">
@@ -33,16 +32,16 @@ export default function CourseSidebar({ completedLessons = 0, totalLessons = 3 }
                 stroke="currentColor"
                 strokeWidth="2"
                 fill="none"
-                strokeDasharray={`${progressPercentage * 0.88} 88`}
+                strokeDasharray={`88`}
                 className="text-blue-400"
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-xs font-medium">{progressPercentage}%</span>
+              <span className="text-xs font-medium">%</span>
             </div>
           </div>
           <span>
-            {completedLessons}/{totalLessons} bài học
+            bài học
           </span>
         </div>
       </div>
@@ -50,13 +49,12 @@ export default function CourseSidebar({ completedLessons = 0, totalLessons = 3 }
       {/* Course Content */}
       <div className="p-4">
         <h3 className="font-semibold text-gray-800 mb-4">Nội dung khóa học</h3>
-
         <div className="space-y-2">
-          <LessonCard/>
-          <LessonCard/>
-          <LessonCard/>
+          {lessons.map((lesson) => (
+            <LessonCard key={lesson._id} lessonName={lesson.name}/>
+          ))}
         </div>
       </div>
     </div>
-  )
+  );
 }

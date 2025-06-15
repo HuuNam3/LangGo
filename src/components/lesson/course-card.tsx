@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, User, Users, BookOpen } from "lucide-react";
@@ -12,10 +12,22 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ICourse } from "@/types/database";
 import { Progress } from "@/components/ui/progress";
+import { checkCourses } from "@/lib/queries";
 
 export default function CourseCard({course, progress}: {course: ICourse, progress?: number}) {
+  const [checkEnroll, setCheckEnroll] = useState<number>(0);
+
+  useEffect(() => {
+    const handle = async () => {
+      const res = await checkCourses(course._id)
+      setCheckEnroll(res)
+    }
+    handle()
+  }, [course._id])
+  
+
   return (
-    <Link key={course._id} href={`/courses/${course.slug}`}>
+    <Link key={course._id} href={ checkEnroll ? `/lessons/${course.slug}` : `/courses/${course.slug}`}>
       <Card className="group relative gap-2 overflow-hidden bg-[#f7f7f7] hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
         <div className="relative h-48 overflow-hidden">
           <div

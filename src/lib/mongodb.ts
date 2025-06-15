@@ -19,8 +19,8 @@ const options = {
     deprecationErrors: true,
   },
   // Add connection timeout options
-  connectTimeoutMS: 10000,
-  socketTimeoutMS: 10000,
+  connectTimeoutMS: 30000,
+  socketTimeoutMS: 30000,
 };
 
 let client: MongoClient;
@@ -50,6 +50,19 @@ export async function getDb() {
   } catch (error) {
     console.error('Error getting database:', error)
     throw error
+  }
+}
+
+export async function closeDB(): Promise<void> {
+  try {
+    if (client) {
+      await client.close();
+      console.log('MongoDB connection closed successfully.');
+    }
+    cachedDb = null;
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+    throw error;
   }
 }
 

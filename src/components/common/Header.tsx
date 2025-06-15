@@ -1,40 +1,42 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { 
-  Bell, 
-  BookOpen, 
-  Menu, 
-  Search, 
-  User, 
-  X,
-   
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-import { ThemeToggle } from "./ThemeToggle"
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Bell, BookOpen, Menu, Search, User, X, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { LanguageSwitcher } from "./LanguageSwitcher"
-import { useLanguage } from "@/lib/i18n/LanguageContext"
-import { LoadingSpinner } from "./LoadingSpinner"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useAuth } from "@/contexts/AuthContext"
+} from "@/components/ui/dropdown-menu";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/AuthContext";
+import { getNameUser } from "@/lib/queries";
 
 export function Header() {
-  const [showSearch, setShowSearch] = useState(false)
-  const { t } = useLanguage()
-  const { user: userData, isLoading, logout} = useAuth();
+  const [showSearch, setShowSearch] = useState(false);
+  const { t } = useLanguage();
+  const { user: userData, isLoading, logout } = useAuth();
+  const [name, setName] = useState<string>();
+  useEffect(() => {
+    const handle = async () => {
+      const data = await getNameUser();
+      setName(data)
+    };
+
+    handle();
+  }, [name]);
 
   if (isLoading) {
     return (
@@ -63,7 +65,7 @@ export function Header() {
           </div>
         </div>
       </header>
-    )
+    );
   }
 
   return (
@@ -78,7 +80,9 @@ export function Header() {
                   LG
                 </span>
               </div>
-              <span className="font-bold text-white text-xl hidden sm:inline-block">LangGo</span>
+              <span className="font-bold text-white text-xl hidden sm:inline-block">
+                LangGo
+              </span>
             </Link>
           </div>
 
@@ -105,7 +109,11 @@ export function Header() {
 
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative cursor-pointer">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:bg-white/10 relative cursor-pointer"
+                >
                   <Bell className="h-5 w-5" />
                   {/* <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
                     5
@@ -123,22 +131,34 @@ export function Header() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                      <AvatarImage src="/images/avatar.png" alt={userData.name || ""} />
+                      <AvatarImage
+                        src="/images/avatar.png"
+                        alt={name || ""}
+                      />
                       <AvatarFallback className="bg-violet-700 text-white">
-                        {userData.name?.slice(0, 1).toUpperCase()}
+                        {name?.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-auto p-2">
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        {userData.name && <p className="font-medium">{userData.name}</p>}
-                        {userData.email && <p className="text-sm text-muted-foreground">{userData.email}</p>}
+                        {name && (
+                          <p className="font-medium">{name}</p>
+                        )}
+                        {userData.email && (
+                          <p className="text-sm text-muted-foreground">
+                            {userData.email}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" className="cursor-pointer flex items-center">
+                      <Link
+                        href="/profile"
+                        className="cursor-pointer flex items-center"
+                      >
                         <User className="mr-2 h-4 w-4" />
                         <span>{t.header.profile}</span>
                       </Link>
@@ -148,7 +168,7 @@ export function Header() {
                       onClick={() => logout()}
                       className="cursor-pointer text-red-500 focus:text-red-500"
                     >
-                      <User className="mr-2 h-4 w-4" />
+                      <LogOut className="mr-2 h-4 w-4"/>
                       <span>{t.header.logout}</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -178,7 +198,11 @@ export function Header() {
         </Button>
 
         <div className="relative">
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-white hover:bg-white/10 relative"
+          >
             <Bell className="h-5 w-5" />
             <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500 text-[10px]">
               5
@@ -189,35 +213,50 @@ export function Header() {
         <LanguageSwitcher />
 
         {isLoading ? (
-          <LoadingSpinner size="sm"/>
+          <LoadingSpinner size="sm" />
         ) : userData ? (
           <div className="relative">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
-                  <AvatarImage src="/images/avatar.png" alt={userData.name || ""} />
+                  <AvatarImage
+                    src="/images/avatar.png"
+                    alt={name || ""}
+                  />
                   <AvatarFallback className="bg-violet-700 text-white">
-                    {userData.name?.slice(0, 2).toUpperCase()}
+                    {name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    {userData.name && <p className="font-medium">{userData.name}</p>}
-                    {userData.email && <p className="text-sm text-muted-foreground">{userData.email}</p>}
+                    {name && (
+                      <p className="font-medium">{name}</p>
+                    )}
+                    {userData.email && (
+                      <p className="text-sm text-muted-foreground">
+                        {userData.email}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer flex items-center">
+                  <Link
+                    href="/profile"
+                    className="cursor-pointer flex items-center"
+                  >
                     <User className="mr-2 h-4 w-4" />
                     <span>{t.header.profile}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout()} className="cursor-pointer text-red-500 focus:text-red-500">
-                  <User className="mr-2 h-4 w-4" />
+                <DropdownMenuItem
+                  onClick={() => logout()}
+                  className="cursor-pointer text-red-500 focus:text-red-500"
+                >
+                  <LogOut className="mr-2 h-4 w-4"/>
                   <span>{t.header.logout}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -225,7 +264,10 @@ export function Header() {
           </div>
         ) : (
           <Link href="/login">
-            <Button size="sm" className="bg-white text-violet-600 hover:bg-white/90">
+            <Button
+              size="sm"
+              className="bg-white text-violet-600 hover:bg-white/90"
+            >
               {t.header.login}
             </Button>
           </Link>
@@ -233,7 +275,11 @@ export function Header() {
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 ml-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/10 ml-2"
+            >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Menu</span>
             </Button>
@@ -273,7 +319,7 @@ export function Header() {
       <div
         className={cn(
           "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
-          showSearch ? "max-h-16 py-2 border-t border-white/10" : "max-h-0",
+          showSearch ? "max-h-16 py-2 border-t border-white/10" : "max-h-0"
         )}
       >
         <div className="container">
@@ -297,5 +343,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

@@ -8,20 +8,18 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { z } from "zod"
 import { useState } from "react"
+import { toast } from "sonner"
 
 const enrollmentSchema = z.object({
-  user_id: z.string(),
   course_id: z.string(),
   enrolled_at: z.string(),
   progress: z.number().min(0),
 })
 
 export default function AddEnrollmentForm({
-  userId,
   courseId,
   slug,
 }: {
-  userId:string,
   courseId: string,
   slug: string
 }) {
@@ -31,7 +29,6 @@ export default function AddEnrollmentForm({
   const form = useForm<z.infer<typeof enrollmentSchema>>({
     resolver: zodResolver(enrollmentSchema),
     defaultValues: {
-      user_id: userId,
       course_id: courseId,
       enrolled_at: new Date().toISOString(),
       progress: 0,
@@ -49,6 +46,7 @@ export default function AddEnrollmentForm({
       })
 
       if (res.ok) {
+        toast.success("đã đăng ký khóa học thành công")
         router.push(`/lessons/${slug}`)
       } else {
         console.error("Không thể ghi danh")
@@ -64,17 +62,6 @@ export default function AddEnrollmentForm({
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="hidden">
-          <FormField
-            control={form.control}
-            name="user_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="course_id"

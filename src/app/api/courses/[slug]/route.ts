@@ -1,19 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse,NextRequest } from "next/server";
 import { put, patch, del } from "@/lib/actions";
 import { getDb } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 // GET /api/courses/[slug]
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
+
   const { slug } = await params;
 
   if (!slug || typeof slug !== "string") {
     return NextResponse.json({ message: "Invalid slug" }, { status: 400 });
   }
-
+  
   const db = await getDb();
 
   // Lấy course theo slug
@@ -34,22 +37,27 @@ export async function GET(
     },
   ];
 
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
   const data = await db.collection("courses").aggregate(pipeline).toArray();
   const course = data[0] || null;
 
   if (!course) {
     return NextResponse.json({ message: "Course not found" }, { status: 404 });
   }
-  
+
   // Giả sử bạn lấy userId từ header hoặc cookie
-  const userId = req.headers.get("x-user-id");
+  const userId = new ObjectId(session.user.id);
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   // Kiểm tra enrollment
   const enrollment = await db.collection("user_courses").findOne({
-    user_id: new ObjectId(userId),
+    user_id: userId,
     course_id: new ObjectId(course._id),
   });
 
