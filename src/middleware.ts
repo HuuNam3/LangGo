@@ -14,6 +14,7 @@ export async function middleware(req: NextRequest) {
     "/lessons/:path*",
     "/courses/:path*",
     "/my-courses",
+    "/dashboard",
   ];
 
   const isPathProtected = protectedPaths.some(
@@ -34,6 +35,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
+  if(!token) {
+    if (pathname === "/dashboard") {
+      // return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -45,5 +52,7 @@ export const config = {
     "/lessons/:path*",
     "/courses/:path*",
     "/my-courses",
+    "/dashboard",
+    "/api",
   ],
 };

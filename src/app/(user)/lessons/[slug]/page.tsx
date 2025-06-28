@@ -2,15 +2,16 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-// import VideoLesson from "@/components/lesson/video-lesson"
+import VideoLesson from "@/components/lesson/video-lesson"
 // import WritenLesson from "@/components/lesson/writen-lesson"
 // import QuizVideo from "@/components/lesson/quiz-video"
 import NavLeft from "@/components/lesson/nav-left";
 // import QuizNonWriten from "@/components/lesson/quiz-non-writen"
 import { useEffect, useState } from "react";
-import { useSearchParams,useParams } from 'next/navigation'
-import { ILesson } from "@/types/database";
+import { useSearchParams, useParams } from 'next/navigation'
+import { ILesson, IVideoContent } from "@/types/database";
 import LoadingPage from "@/components/common/LoadingPage";
+import { countLessonCompletedOfCourses } from "@/lib/queries"
 
 export default function LanguageLearningPlatform() {
   const params = useParams();
@@ -18,21 +19,26 @@ export default function LanguageLearningPlatform() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [lessons, setLessons] = useState<ILesson[]>()
-
+  const [lessonsCompleted, setLessonsCompleted] = useState(0)
+  const [videoContent, setVideoContent] = useState<IVideoContent>()
 
   useEffect(() => {
     const handle = async () => {
       const res = await fetch(`/api/lessons/${slug}`);
       const data = await res.json();
-      console.log(id)
-      console.log(data)
+      const res1 = await fetch(`/api/video_contents?id=${encodeURIComponent(data[0]._id)}`);
+      const data1 = await res1.json();
+      console.log(data1)
+      setVideoContent(data1)
+      const query = await countLessonCompletedOfCourses(data[0].course_id)
+      setLessonsCompleted(query)
       setLessons(data)
     };
     handle();
-  }, [id,slug]);
+  }, [id, slug]);
 
-  if(!lessons) {
-    return <LoadingPage/>
+  if (!lessons || !videoContent) {
+    return <LoadingPage />
   }
 
   return (
@@ -40,11 +46,8 @@ export default function LanguageLearningPlatform() {
       {/* Main Content */}
       <div className="flex-1 p-2">
         {/* Video Player Component */}
-        {/* <VideoLesson
-          title="Bài 1: Chào hỏi hàng ngày"
-          subtitle="Học cách chào hỏi trong các tình huống thường ngày"
-          duration="6:30"
-        /> */}
+          <VideoLesson subtitle={videoContent.subtitle} videoUrl={videoContent.url} title={lessons[0]?.name} 
+        />
         {/* <WritenLesson/> */}
         {/* <QuizVideo/> */}
         {/* <QuizNonWriten/> */}
@@ -52,7 +55,7 @@ export default function LanguageLearningPlatform() {
 
       {/* Course Sidebar Component */}
       <div className="pt-2">
-        <NavLeft lessons={lessons}
+        <NavLeft lessons={lessons} completedLessons={lessonsCompleted} totalLessons={lessons.length}
         />
       </div>
 

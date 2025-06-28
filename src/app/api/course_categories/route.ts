@@ -1,102 +1,59 @@
-import { NextResponse } from 'next/server'
-import { put, patch, del } from '@/lib/actions'
-import { getDb } from '@/lib/mongodb'
+import { NextResponse } from "next/server";
+import { getDb } from "@/lib/mongodb";
 
 export async function GET() {
   try {
-    const db = await getDb()
-    
+    const db = await getDb();
+
     const pipeline = [
       {
         $lookup: {
           from: "courses",
           localField: "_id",
           foreignField: "course_categories_id",
-          as: "courses"
-        }
-      }
-    ]
-    
-    const combinedData = await db.collection('course_categories').aggregate(pipeline).toArray()
-    return NextResponse.json(combinedData)
+          as: "courses",
+        },
+      },
+    ];
+
+    const combinedData = await db
+      .collection("course_categories")
+      .aggregate(pipeline)
+      .toArray();
+    return NextResponse.json(combinedData);
   } catch (error) {
-    console.error('GET courses error:', error)
+    console.error("GET courses error:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch courses' },
+      { error: "Failed to fetch courses" },
       { status: 500 }
-    )
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const db = await getDb()
-    const lessons = db.collection('courses')
+    const body = await request.json();
+    const db = await getDb();
+    const course = db.collection("course_categories");
 
-    // Check for existing lesson ID
-    const existingLesson = await lessons.findOne({ id: body.id })
-    if (existingLesson) {
-      return NextResponse.json(
-        { error: 'Lesson ID already exists' },
-        { status: 409 }
-      )
-    }
+    const { title, description } = body;
 
-    // Create new lesson
-    const result = await lessons.insertOne(body)
-    
+    const result = await course.insertOne({
+      title,
+      description,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
     return NextResponse.json({
       success: true,
-      insertedId: result.insertedId.toString()
-    })
+      insertedId: result.insertedId.toString(),
+    });
   } catch (error) {
-    console.error('POST lesson error:', error)
+    console.error("POST lesson error:", error);
     return NextResponse.json(
-      { error: 'Failed to create lesson' },
+      { error: "Failed to create lesson" },
       { status: 500 }
-    )
-  }
-}
-
-export async function PUT(request: Request) {
-  try {
-    const body = await request.json()
-    const result = await put('courses', body._id, body)
-    return NextResponse.json(result)
-  } catch (error) {
-    console.error('PUT lesson error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update lesson' },
-      { status: 500 }
-    )
-  }
-}
-
-export async function PATCH(request: Request) {
-  try {
-    const body = await request.json()
-    const result = await patch('courses', body._id, body)
-    return NextResponse.json(result)
-  } catch (error) {
-    console.error('PATCH lesson error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update lesson' },
-      { status: 500 }
-    )
-  }
-}
-
-export async function DELETE(request: Request) {
-  try {
-    const body = await request.json()
-    const result = await del('courses', body)
-    return NextResponse.json(result)
-  } catch (error) {
-    console.error('DELETE lesson error:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete lesson' },
-      { status: 500 }
-    )
+    );
   }
 }

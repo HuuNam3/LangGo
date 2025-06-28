@@ -37,3 +37,78 @@ export const enrollmentSchema = z.object({
   enrolled_at: z.string(),
   progress: z.number().min(0),
 });
+
+export const courseCategorySchema = z.object({
+  title: z.string().min(1, "Tiêu đề là bắt buộc"),
+  description: z.string().min(1, "Mô tả là bắt buộc"),
+});
+
+export const courseSchema = z.object({
+  name: z.string().min(1, "Tên khóa học không được để trống"),
+  instructor: z.string().min(1, "Giảng viên không được để trống"),
+  course_categories_name: z.string().min(1, "Tên danh mục không được để trống"),
+  duration: z.number().min(1, "Thời lượng không được để trống"),
+  order: z.number().min(1, "Sắp xếp không được để trống"),
+  thumbnail: z.string().min(1, "ảnh  không được để trống"),
+  language: z.string().min(1, "Ngôn ngữ không được để trống"),
+  studied: z
+    .string()
+    .min(1, "Học viên không được để trống")
+    .refine((val) => !isNaN(Number(val)), "Học viên phải là số"),
+  course_categories_id: z.string().min(1, "ID không được để trống"),
+  slug: z.string().min(1, "Link bài học không được để trống"),
+  level: z.string().min(1, "Trình độ không được để trống"),
+});
+
+export const lessonSchema = z.object({
+  title: z.string().min(1, "Tiêu đề bài học là bắt buộc"),
+  content: z.string().min(1, "Nội dung là bắt buộc"),
+  course_id: z.string().min(1, "ID khóa học là bắt buộc"),
+  order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
+});
+
+export const userAccountSchema = z.object({
+  username: z.string().min(1, "Tên đăng nhập là bắt buộc"),
+  email: z.string().email("Email không hợp lệ"),
+  full_name: z.string().min(1, "Họ tên là bắt buộc"),
+  phone: z.string().optional(),
+});
+
+export const userInformationSchema = z.object({
+  user_id: z.string().min(1, "ID người dùng là bắt buộc"),
+  bio: z.string().optional(),
+  avatar_url: z.string().optional(),
+  birth_date: z.string().optional(),
+});
+
+export const lessonContentSchema = z.object({
+  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
+  content_type: z.string().min(1, "Loại nội dung là bắt buộc"),
+  content_data: z.string().min(1, "Dữ liệu nội dung là bắt buộc"),
+  order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
+});
+
+export const videoContentSchema = z.object({
+  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
+  video_url: z.string().url("URL video không hợp lệ"),
+  duration: z.number().min(1, "Thời lượng phải lớn hơn 0"),
+  thumbnail_url: z.string().optional(),
+});
+
+export const schemas = {
+  course_categories: courseCategorySchema,
+  courses: courseSchema,
+  lessons: lessonSchema,
+  user_accounts: userAccountSchema,
+  user_information: userInformationSchema,
+  lesson_contents: lessonContentSchema,
+  video_contents: videoContentSchema,
+};
+
+export type CourseCategoryFormData = z.infer<typeof courseCategorySchema>;
+export type CourseFormData = z.infer<typeof courseSchema>;
+export type LessonFormData = z.infer<typeof lessonSchema>;
+export type UserAccountFormData = z.infer<typeof userAccountSchema>;
+export type UserInformationFormData = z.infer<typeof userInformationSchema>;
+export type LessonContentFormData = z.infer<typeof lessonContentSchema>;
+export type VideoContentFormData = z.infer<typeof videoContentSchema>;

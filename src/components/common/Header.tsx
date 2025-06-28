@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
-import { Bell, BookOpen, Menu, Search, User, X, LogOut } from "lucide-react";
+import { Bell, BookOpen, Menu, Search, User, X, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -37,6 +37,25 @@ export function Header() {
 
     handle();
   }, [name]);
+
+  const showAdmin = (role: string): ReactNode => {
+    if (role === "admin") {
+      return(
+        <>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link
+              href="/dashboard"
+              className="cursor-pointer flex items-center"
+            >
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>dashboard</span>
+            </Link>
+          </DropdownMenuItem>
+        </>
+      )
+    } else return
+  }
 
   if (isLoading) {
     return (
@@ -163,12 +182,13 @@ export function Header() {
                         <span>{t.header.profile}</span>
                       </Link>
                     </DropdownMenuItem>
+                    {showAdmin(userData.role)}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => logout()}
                       className="cursor-pointer text-red-500 focus:text-red-500"
                     >
-                      <LogOut className="mr-2 h-4 w-4"/>
+                      <LogOut className="mr-2 h-4 w-4" />
                       <span>{t.header.logout}</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -251,12 +271,13 @@ export function Header() {
                     <span>{t.header.profile}</span>
                   </Link>
                 </DropdownMenuItem>
+                {showAdmin(userData.role)}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => logout()}
                   className="cursor-pointer text-red-500 focus:text-red-500"
                 >
-                  <LogOut className="mr-2 h-4 w-4"/>
+                  <LogOut className="mr-2 h-4 w-4" />
                   <span>{t.header.logout}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

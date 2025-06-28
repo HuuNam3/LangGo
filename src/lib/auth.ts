@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions, User, Account, Session, DefaultSession } from "next-auth"
+import NextAuth, { NextAuthOptions, User, Session, DefaultSession } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import FacebookProvider from "next-auth/providers/facebook"
@@ -10,6 +10,7 @@ import { getDb } from "@/lib/mongodb"
 // Extend User type
 interface ExtendedUser extends User {
   username?: string;
+  role:string;
 }
 
 // Extend Session type
@@ -18,12 +19,14 @@ interface ExtendedSession extends Session {
   user: {
     id: string;
     username?: string;
+    role: string
   } & DefaultSession["user"];
 }
 
 // Extend JWT type
 interface ExtendedToken extends JWT {
   username?: string;
+  role:string;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -74,6 +77,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name,
             username: user.username,
+            role: user.role,
           } as ExtendedUser
         } catch (error) {
           console.error("Error in authorize:", error)
@@ -88,10 +92,11 @@ export const authOptions: NextAuthOptions = {
     error: "/login",
   },
   callbacks: {
-    async jwt({ token, user, account }: { token: ExtendedToken; user?: ExtendedUser; account?: Account | null }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
-        token.username = user.username
+        token.username = (user as ExtendedUser).username
+        token.role = (user as ExtendedUser).role
       }
       if (account) {
         token.provider = account.provider
@@ -105,6 +110,7 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           username: (token as ExtendedToken).username,
+          role: (token as ExtendedToken).role,
         },
         provider: (token as ExtendedToken).provider,
       } as ExtendedSession

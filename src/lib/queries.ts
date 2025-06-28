@@ -8,7 +8,8 @@ export async function countCourses(): Promise<number> {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      throw new Error("Unauthorized");
+      console.error("no login");
+      return 0;
     }
 
     const db = await getDb();
@@ -42,11 +43,45 @@ export async function countLessonCompleted(): Promise<number> {
   }
 }
 
-export async function getNameUser(): Promise<string> {
+export async function countLessonCompletedOfCourses(idCourses: string): Promise<number> {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       throw new Error("Unauthorized");
+    }
+
+    const db = await getDb();
+    const count = await db.collection("user_courses").countDocuments({
+      user_id: new ObjectId(session.user.id),
+      course_id: new ObjectId(idCourses),
+      progress: 100,
+    });
+    return count;
+  } catch (error) {
+    console.error("countLessonCompleted error:", error);
+    throw error;
+  }
+}
+
+export async function countLessionsOfCourses(idCourses: string): Promise<number> {
+  try {
+    const db = await getDb();
+    const count = await db.collection("lessons").countDocuments({
+      course_id: new ObjectId(idCourses),
+    });
+
+    return count;
+  } catch (error) {
+    console.error("countCourses error:", error);
+    throw error;
+  }
+}
+
+export async function getNameUser(): Promise<string> {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return "user";
     }
 
     const db = await getDb();
@@ -71,13 +106,13 @@ export async function checkCourses(courses_id: string): Promise<number> {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      throw new Error("Unauthorized");
+      return 0;
     }
 
     const db = await getDb();
     const count = await db.collection("user_courses").countDocuments({
       user_id: new ObjectId(session.user.id),
-      course_id:  new ObjectId(courses_id),
+      course_id: new ObjectId(courses_id),
     });
 
     return count;

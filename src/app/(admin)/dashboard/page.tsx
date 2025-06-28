@@ -1,7 +1,8 @@
 'use client'
+import { AdminDashboard } from "@/components/admin/admin-dashboard"
 
-export default function AdminDashboard() {
+export default function Dashboard() {
   return (
-    <h1>dashboard trangtrang admin</h1>
-  );
+    <AdminDashboard />
+  )
 } 

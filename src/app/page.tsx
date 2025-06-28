@@ -16,6 +16,7 @@ export default function Home() {
       try {
         const response = await fetch('/api/course_categories')
         const data = await response.json()
+        console.log(data)
         setCoursesCategory(data)
       } catch (error) {
         console.error('Failed to fetch courses:', error)

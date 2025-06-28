@@ -96,7 +96,9 @@ export function Profile() {
         new Date(profileData.joined).toLocaleDateString(),
         "D/M/YYYY"
       );
+      console.log(joinedDate)
       const today = dayjs().startOf("day");
+      console.log(today.diff(joinedDate, "day"))
       return today.diff(joinedDate, "day");
     }
     return 0;
