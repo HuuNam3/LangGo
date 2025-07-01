@@ -21,6 +21,7 @@ export function AdminDashboard() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [viewingRecord, setViewingRecord] = useState<DatabaseRecord | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  // const [listId, setListId] = useState()
 
   const currentCollection = collections.find((c) => c.name === activeCollection)!
   const currentData = data[activeCollection] || []
@@ -40,6 +41,7 @@ export function AdminDashboard() {
       } else {
         toast.error("Không thể tải dữ liệu")
       }
+
     } catch (error) {
       console.error("Error fetching data:", error)
       toast.error("Không thể tải dữ liệu")

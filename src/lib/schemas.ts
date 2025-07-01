@@ -60,11 +60,31 @@ export const courseSchema = z.object({
   level: z.string().min(1, "Trình độ không được để trống"),
 });
 
+export const courseIntroductionSchema = z.object({
+  description: z.string().min(1, "Mô tả không được để trống"),
+  prerequisites: z.string().min(1, "Điều kiện không được để trống"),
+  you_learn: z.array(z.string()),
+  course_id: z.string().min(1, "ID không được để trống"),
+});
+
 export const lessonSchema = z.object({
-  title: z.string().min(1, "Tiêu đề bài học là bắt buộc"),
-  content: z.string().min(1, "Nội dung là bắt buộc"),
+  name: z.string().min(1, "Tên bài học là bắt buộc"),
   course_id: z.string().min(1, "ID khóa học là bắt buộc"),
   order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
+});
+
+export const lessonContentSchema = z.object({
+  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
+  content_type: z.string().min(1, "Loại nội dung là bắt buộc"),
+  content_data: z.string().min(1, "Dữ liệu nội dung là bắt buộc"),
+  order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
+});
+
+export const videoContentSchema = z.object({
+  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
+  url: z.string().min(1, "URL video không được để "),
+  duration: z.number().min(1, "Thời lượng phải lớn hơn 0"),
+  subtitle: z.string(),
 });
 
 export const userAccountSchema = z.object({
@@ -81,28 +101,16 @@ export const userInformationSchema = z.object({
   birth_date: z.string().optional(),
 });
 
-export const lessonContentSchema = z.object({
-  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
-  content_type: z.string().min(1, "Loại nội dung là bắt buộc"),
-  content_data: z.string().min(1, "Dữ liệu nội dung là bắt buộc"),
-  order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
-});
-
-export const videoContentSchema = z.object({
-  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
-  video_url: z.string().url("URL video không hợp lệ"),
-  duration: z.number().min(1, "Thời lượng phải lớn hơn 0"),
-  thumbnail_url: z.string().optional(),
-});
-
 export const schemas = {
   course_categories: courseCategorySchema,
   courses: courseSchema,
+  course_introduction: courseIntroductionSchema,
   lessons: lessonSchema,
   user_accounts: userAccountSchema,
   user_information: userInformationSchema,
   lesson_contents: lessonContentSchema,
   video_contents: videoContentSchema,
+
 };
 
 export type CourseCategoryFormData = z.infer<typeof courseCategorySchema>;
@@ -112,3 +120,4 @@ export type UserAccountFormData = z.infer<typeof userAccountSchema>;
 export type UserInformationFormData = z.infer<typeof userInformationSchema>;
 export type LessonContentFormData = z.infer<typeof lessonContentSchema>;
 export type VideoContentFormData = z.infer<typeof videoContentSchema>;
+export type CourseIntroductionFormData = z.infer<typeof courseIntroductionSchema>;

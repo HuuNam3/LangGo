@@ -103,14 +103,19 @@ export interface IVideoContent {
   updatedAt: Date;
 }
 
-export interface Collection<T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap> {
+export interface Collection<
+  T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap
+> {
   name: T;
   displayName: string;
   fields: Array<{
     key: string;
     label: string;
-    type: "text" | "textarea" | "date" | "email" | "number" | "objectId";
+    type: "text" | "textarea" | "date" | "email" | "number" | "combobox"| "array";
     required?: boolean;
+    options?: Array<{ value: string; label: string }>;
+    searchable?: boolean;
+    allowCustom?: boolean;
   }>;
 }
 // ----------------------------------------------------------------------------------------------------------
@@ -152,7 +157,12 @@ export const collections: Collection[] = [
       { key: "thumbnail", label: "Ảnh nền", type: "text", required: true },
       { key: "language", label: "Ngôn ngữ", type: "text", required: true },
       { key: "studied", label: "Học viên ", type: "text", required: true },
-      { key: "course_categories_id", label: "id categories", type: "text", required: true },
+      {
+        key: "course_categories_id",
+        label: "id categories",
+        type: "text",
+        required: true,
+      },
       { key: "slug", label: "link bài học", type: "text", required: true },
       { key: "level", label: "Trình độ", type: "text", required: true },
     ],
@@ -171,8 +181,7 @@ export const collections: Collection[] = [
       {
         key: "you_learn",
         label: "Nhận được gì sao khóa học",
-        type: "textarea",
-        required: true,
+        type: "array",
       },
       {
         key: "course_id",
@@ -186,10 +195,44 @@ export const collections: Collection[] = [
     name: "lessons",
     displayName: "Bài học",
     fields: [
-      { key: "title", label: "Tiêu đề bài học", type: "text", required: true },
-      { key: "content", label: "Nội dung", type: "textarea", required: true },
+      { key: "name", label: "Tên bài học", type: "text", required: true },
+      { key: "order", label: "sắp xếp", type: "number", required: true },
       { key: "course_id", label: "ID khóa học", type: "text", required: true },
+    ],
+  },
+  {
+    name: "lesson_contents",
+    displayName: "Nội dung bài học",
+    fields: [
+      { key: "lesson_id", label: "ID bài học", type: "text", required: true },
+      {
+        key: "content_type",
+        label: "Loại nội dung",
+        type: "text",
+        required: true,
+      },
+      {
+        key: "content_data",
+        label: "Dữ liệu nội dung",
+        type: "textarea",
+        required: true,
+      },
       { key: "order", label: "Thứ tự", type: "number", required: true },
+    ],
+  },
+  {
+    name: "video_contents",
+    displayName: "Nội dung video",
+    fields: [
+      { key: "lesson_id", label: "ID bài học", type: "text", required: true },
+      { key: "url", label: "URL video", type: "text", required: true },
+      {
+        key: "duration",
+        label: "Thời lượng (giây)",
+        type: "number",
+        required: true,
+      },
+      { key: "subtitle", label: "Mô tả", type: "text" },
     ],
   },
   {
@@ -232,41 +275,7 @@ export const collections: Collection[] = [
       { key: "birth_date", label: "Ngày sinh", type: "date" },
     ],
   },
-  {
-    name: "lesson_contents",
-    displayName: "Nội dung bài học",
-    fields: [
-      { key: "lesson_id", label: "ID bài học", type: "text", required: true },
-      {
-        key: "content_type",
-        label: "Loại nội dung",
-        type: "text",
-        required: true,
-      },
-      {
-        key: "content_data",
-        label: "Dữ liệu nội dung",
-        type: "textarea",
-        required: true,
-      },
-      { key: "order", label: "Thứ tự", type: "number", required: true },
-    ],
-  },
-  {
-    name: "video_contents",
-    displayName: "Nội dung video",
-    fields: [
-      { key: "lesson_id", label: "ID bài học", type: "text", required: true },
-      { key: "video_url", label: "URL video", type: "text", required: true },
-      {
-        key: "duration",
-        label: "Thời lượng (giây)",
-        type: "number",
-        required: true,
-      },
-      { key: "thumbnail_url", label: "URL thumbnail", type: "text" },
-    ],
-  },
+  
 ] as const;
 
 export interface DatabaseRecord {
@@ -277,13 +286,16 @@ export interface DatabaseRecord {
 export interface CollectionField {
   key: string;
   label: string;
-  type: "text" | "textarea" | "date" | "email" | "number";
+  type: "text" | "textarea" | "date" | "email" | "number" | "combobox"| "array";
   required?: boolean;
+  options?: Array<{ value: string; label: string }>;
+  searchable?: boolean;
+  allowCustom?: boolean;
 }
 
 // -------------------------------------------------------------------------------------------------------------------------
 // component
-export type FieldValueType = string | number | null
+export type FieldValueType = string | number | null;
 
 // Create a mapping from collection names to their form value types
 export type CollectionFormValuesMap = {
@@ -346,11 +358,14 @@ export type CollectionFormValuesMap = {
     duration: number;
     thumbnail_url?: string;
   };
-}
+};
 
 // Dynamic form values type based on collection name
-export type CollectionFormValues<T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap> = 
-  T extends keyof CollectionFormValuesMap ? CollectionFormValuesMap[T] : Record<string, FieldValueType>
+export type CollectionFormValues<
+  T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap
+> = T extends keyof CollectionFormValuesMap
+  ? CollectionFormValuesMap[T]
+  : Record<string, FieldValueType>;
 
 export interface SidebarProps {
   collections: Collection[];
@@ -365,7 +380,9 @@ export interface DataTableProps {
   onDelete: (record: DatabaseRecord) => void;
 }
 
-export interface AddEditModalProps<T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap> {
+export interface AddEditModalProps<
+  T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap
+> {
   isOpen: boolean;
   onClose: () => void;
   collection: Collection<T>;
