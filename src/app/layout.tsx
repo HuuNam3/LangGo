@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LangGo",
   description: "learn language with me",
+  icons: {
+    icon: [
+      { url: "/public/images/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+    ]
+  }
 };
 
 export default function RootLayout({
