@@ -1,6 +1,6 @@
 export type UserRole = "student" | "instructor" | "admin";
 export type Gender = "male" | "female" | "other";
-
+export type progress = "in_progress" | "completed";
 export interface IUserAccounts {
   _id: string;
   name: string;
@@ -103,6 +103,17 @@ export interface IVideoContent {
   updatedAt: Date;
 }
 
+export interface IUserLessonProgress {
+  _id: string;
+  user_id: string;
+  course_id: string;
+  lesson_id: string;
+  status: progress;
+  progress_percent: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Collection<
   T extends keyof CollectionFormValuesMap = keyof CollectionFormValuesMap
 > {
@@ -111,7 +122,14 @@ export interface Collection<
   fields: Array<{
     key: string;
     label: string;
-    type: "text" | "textarea" | "date" | "email" | "number" | "combobox"| "array";
+    type:
+      | "text"
+      | "textarea"
+      | "date"
+      | "email"
+      | "number"
+      | "combobox"
+      | "array";
     required?: boolean;
     options?: Array<{ value: string; label: string }>;
     searchable?: boolean;
@@ -221,6 +239,37 @@ export const collections: Collection[] = [
     ],
   },
   {
+    name: "user_lesson_progress",
+    displayName: "tiến độ bài học của user",
+    fields: [
+      { key: "user_id", label: "ID user", type: "text", required: true },
+      { key: "course_id", label: "ID khóa học", type: "text", required: true },
+      { key: "lesson_id", label: "ID bài học", type: "text", required: true },
+      {
+        key: "status",
+        label: "Trạng thái",
+        type: "combobox",
+        required: true,
+        options: [
+          {
+            value: "in_progress",
+            label: "đang học",
+          },
+          {
+            value: "completed",
+            label: "hoành thành",
+          },
+        ],
+      },
+      {
+        key: "progress_percent",
+        label: "Tiến độ",
+        type: "number",
+        required: true,
+      },
+    ],
+  },
+  {
     name: "video_contents",
     displayName: "Nội dung video",
     fields: [
@@ -275,7 +324,6 @@ export const collections: Collection[] = [
       { key: "birth_date", label: "Ngày sinh", type: "date" },
     ],
   },
-  
 ] as const;
 
 export interface DatabaseRecord {
@@ -286,7 +334,14 @@ export interface DatabaseRecord {
 export interface CollectionField {
   key: string;
   label: string;
-  type: "text" | "textarea" | "date" | "email" | "number" | "combobox"| "array";
+  type:
+    | "text"
+    | "textarea"
+    | "date"
+    | "email"
+    | "number"
+    | "combobox"
+    | "array";
   required?: boolean;
   options?: Array<{ value: string; label: string }>;
   searchable?: boolean;
@@ -327,6 +382,16 @@ export type CollectionFormValuesMap = {
     content: string;
     course_id: string;
     order: number;
+  };
+  user_lesson_progress: {
+    _id: string;
+    user_id: string;
+    course_id: string;
+    lesson_id: string;
+    status: progress;
+    progress_percent: number;
+    createdAt: Date;
+    updatedAt: Date;
   };
   user_courses: {
     user_id: string;

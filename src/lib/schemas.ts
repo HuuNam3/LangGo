@@ -80,6 +80,14 @@ export const lessonContentSchema = z.object({
   order: z.number().min(1, "Thứ tự phải lớn hơn 0"),
 });
 
+export const userLessonProgressSchema = z.object({
+  user_id: z.string().min(1, "ID bài học là bắt buộc"),
+  course_id: z.string().min(1, "ID bài học là bắt buộc"),
+  lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
+  status: z.string().min(1, "Chọn trạng thái bài học"),
+  progress_percent: z.number().min(1, "tiến độ"),
+});
+
 export const videoContentSchema = z.object({
   lesson_id: z.string().min(1, "ID bài học là bắt buộc"),
   url: z.string().min(1, "URL video không được để "),
@@ -101,6 +109,8 @@ export const userInformationSchema = z.object({
   birth_date: z.string().optional(),
 });
 
+
+
 export const schemas = {
   course_categories: courseCategorySchema,
   courses: courseSchema,
@@ -110,6 +120,7 @@ export const schemas = {
   user_information: userInformationSchema,
   lesson_contents: lessonContentSchema,
   video_contents: videoContentSchema,
+  user_lesson_progress: userLessonProgressSchema,
 
 };
 
@@ -119,5 +130,6 @@ export type LessonFormData = z.infer<typeof lessonSchema>;
 export type UserAccountFormData = z.infer<typeof userAccountSchema>;
 export type UserInformationFormData = z.infer<typeof userInformationSchema>;
 export type LessonContentFormData = z.infer<typeof lessonContentSchema>;
+export type userLessonProgressFormData = z.infer<typeof userLessonProgressSchema>;
 export type VideoContentFormData = z.infer<typeof videoContentSchema>;
 export type CourseIntroductionFormData = z.infer<typeof courseIntroductionSchema>;

@@ -8,6 +8,7 @@ import type { SidebarProps } from "@/types/database"
 const collectionIcons: Record<string, React.ReactNode> = {
   course_categories: <Database className="w-5 h-5" />,
   course_introduction: <Database className="w-5 h-5" />,
+  user_lesson_progress: <GraduationCap className="w-5 h-5" />,
   courses: <GraduationCap className="w-5 h-5" />,
   user_courses: <GraduationCap className="w-5 h-5" />,
   lessons: <BookOpen className="w-5 h-5" />,

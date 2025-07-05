@@ -21,13 +21,13 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuthRedux } from "@/hooks/useAuthRedux"
 import { getNameUser } from "@/lib/queries";
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const { t } = useLanguage();
-  const { user: userData, isLoading, logout } = useAuth();
+  const { user: userData, isLoading, logout } = useAuthRedux();
   const [name, setName] = useState<string>();
   useEffect(() => {
     const handle = async () => {

@@ -40,6 +40,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
       body.course_id = new ObjectId(body.course_id);
     } else if (body.lesson_id) {
       body.lesson_id = new ObjectId(body.lesson_id);
+    } else if (body.user_id) {
+      body.user_id = new ObjectId(body.user_id);
     }
 
     const document = {

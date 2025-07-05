@@ -3,9 +3,10 @@
 
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import { SessionProvider } from "next-auth/react";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { Toaster } from "sonner";
+import { Provider } from "react-redux"
+import { store } from "@/store"
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -16,7 +17,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
     >
       <SessionProvider>
-        <AuthProvider>
+        <Provider store={store}>
           <LanguageProvider>
             <div className="flex flex-col min-h-screen">
               <main className="flex-1">
@@ -25,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               </main>
             </div>
           </LanguageProvider>
-        </AuthProvider>
+        </Provider>
       </SessionProvider>
     </ThemeProvider>
   );
