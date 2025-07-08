@@ -6,6 +6,7 @@ import { getServerSession as getSession } from "next-auth"
 import { compare, hash } from "bcrypt"
 import { JWT } from "next-auth/jwt"
 import { getDb } from "@/lib/mongodb"
+import { ObjectId } from "mongodb"
 
 // Extend User type
 interface ExtendedUser extends User {
@@ -20,6 +21,7 @@ interface ExtendedSession extends Session {
     id: string;
     username?: string;
     role: string
+    image: string;
   } & DefaultSession["user"];
 }
 
@@ -94,14 +96,55 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id
-        token.username = (user as ExtendedUser).username
-        token.role = (user as ExtendedUser).role
+        token.id = user.id;
+        token.username = (user as ExtendedUser).username;
+        token.role = (user as ExtendedUser).role || "user";
+
+        // Chỉ xử lý khi đăng nhập Google/Facebook
+        if (account?.provider === "google" || account?.provider === "facebook") {
+          const db = await getDb();
+          const users = db.collection("user_accounts");
+          const usersInfo = db.collection("user_information");
+
+          const existingUser = await users.findOne({ email: user.email, provider: "google" });
+
+          if (!existingUser) {
+            const newUser = {
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              role: "user",
+              provider: account.provider,
+              createdAt: new Date(),
+            };
+
+            const result = await users.insertOne(newUser);
+            token.id = result.insertedId.toString(); // gán lại ID
+            token.role = "user";
+
+            const newInfoUser = {
+              name: user.name,
+              avatarUrl: user.image,
+              bio: "newbie 🌍",
+              joined: new Date(),
+              createdAt: new Date(),
+              user_accounts_id: new ObjectId(token.id)
+            }
+
+            await usersInfo.insertOne(newInfoUser);
+
+          } else {
+            token.id = existingUser._id.toString();
+            token.role = existingUser.role;
+          }
+        }
       }
+
       if (account) {
-        token.provider = account.provider
+        token.provider = account.provider;
       }
-      return token
+
+      return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       return {

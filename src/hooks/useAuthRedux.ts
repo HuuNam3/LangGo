@@ -16,6 +16,7 @@ export function useAuthRedux() {
   const { user, isLoading } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
+    console.log(session)
     if (status === "loading") {
       dispatch(setLoading(true))
     } else if (status === "authenticated" && session?.user) {
@@ -24,7 +25,7 @@ export function useAuthRedux() {
         name: session.user.name || "",
         email: session.user.email || "",
         username: session.user.username,
-        avatar: session.user.avatar,
+        image: session.user.image,
         role: session.user.role,
       }))
     } else {

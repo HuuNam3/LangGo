@@ -28,16 +28,21 @@ export function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const { t } = useLanguage();
   const { user: userData, isLoading, logout } = useAuthRedux();
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("/images/avatar.png")
   useEffect(() => {
     const handle = async () => {
-      const data = await getNameUser();
-      console.log(userData)
-      setName(data)
+      if(userData?.name && userData?.image) {
+        setName(userData.name)
+        setAvatar(userData?.image)
+      } else if(userData?.name === ""){
+        const data = await getNameUser();
+        setName(data)
+      }
     };
 
     handle();
-  }, [name]);
+  }, [userData?.image,userData?.name]);
 
   const showAdmin = (role: string): ReactNode => {
     if (role === "admin") {
@@ -152,7 +157,7 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
                       <AvatarImage
-                        src="/images/avatar.png"
+                        src={avatar}
                         alt={name || ""}
                       />
                       <AvatarFallback className="bg-violet-700 text-white">
@@ -241,7 +246,7 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
                   <AvatarImage
-                    src="/images/avatar.png"
+                    src={avatar}
                     alt={name || ""}
                   />
                   <AvatarFallback className="bg-violet-700 text-white">
