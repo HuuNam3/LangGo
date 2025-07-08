@@ -9,7 +9,7 @@ interface User {
   name: string;
   email: string;
   username?: string;
-  avatar?: string;
+  image?: string;
   role: string;
 }
 
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         name: session.user.name || "",
         email: session.user.email || "",
         username: session.user.username,
-        avatar: session.user.avatar,
+        image: session.user.image,
         role: session.user.role,
       });
       setIsLoading(false);
