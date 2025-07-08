@@ -32,6 +32,7 @@ export function Header() {
   useEffect(() => {
     const handle = async () => {
       const data = await getNameUser();
+      console.log(userData)
       setName(data)
     };
 

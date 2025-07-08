@@ -14,6 +14,17 @@ export async function PUT(
     const { collection, id } = await context.params
     const collectionss = db.collection(collection)
 
+    if (body.course_categories_id) {
+          body.course_categories_id = new ObjectId(body.course_categories_id);
+        } else if (body.course_id) {
+          body.course_id = new ObjectId(body.course_id);
+        } else if (body.lesson_id) {
+          body.lesson_id = new ObjectId(body.lesson_id);
+        } else if (body.user_id) {
+          body.user_id = new ObjectId(body.user_id);
+        }
+    
+
     const updateData = {
       ...body,
       updatedAt: new Date(),
