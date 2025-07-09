@@ -19,8 +19,8 @@ const options = {
     deprecationErrors: true,
   },
   // Add connection timeout options
-  connectTimeoutMS: 30000,
-  socketTimeoutMS: 30000,
+  connectTimeoutMS: 60000,
+  socketTimeoutMS: 60000,
 };
 
 let client: MongoClient;
