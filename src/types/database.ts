@@ -7,24 +7,27 @@ export interface IUserAccounts {
   email: string;
   username: string;
   passwordHash: string;
+  bio?: string;
+  image? : string;
+  joined: Date;
   role: UserRole;
   createdAt: Date;
 }
 
-export interface IUserInformation {
-  _id: string;
-  userId: string;
-  name: string;
-  avatarUrl?: string;
-  bio?: string;
-  joined: Date;
-  birthday?: Date;
-  gender?: Gender;
-  phoneNumber?: string;
-  country?: string;
-  createdAt: Date;
-  updatedAt?: Date;
-}
+// export interface IUserInformation {
+//   _id: string;
+//   userId: string;
+//   name: string;
+//   avatarUrl?: string;
+//   bio?: string;
+//   joined: Date;
+//   birthday?: Date;
+//   gender?: Gender;
+//   phoneNumber?: string;
+//   country?: string;
+//   createdAt: Date;
+//   updatedAt?: Date;
+// }
 
 export interface IIntroduction {
   _id: string;
@@ -305,23 +308,16 @@ export const collections: Collection[] = [
     ],
   },
   {
-    name: "user_accounts",
+    name: "user_accounts", 
     displayName: "Tài khoản người dùng",
     fields: [
       { key: "username", label: "Tên đăng nhập", type: "text", required: true },
       { key: "email", label: "Email", type: "email", required: true },
-      { key: "full_name", label: "Họ tên", type: "text", required: true },
+      { key: "name", label: "Họ tên", type: "text", required: true },
+      { key: "image", label: "ảnh đại diện", type: "text", required: true },
       { key: "role", label: "quyền", type: "text", required: true },
-    ],
-  },
-  {
-    name: "user_information",
-    displayName: "Thông tin người dùng",
-    fields: [
-      { key: "user_id", label: "ID người dùng", type: "text", required: true },
+      { key: "provider", label: "đăng nhập", type: "text", required: true },
       { key: "bio", label: "Tiểu sử", type: "textarea" },
-      { key: "avatar_url", label: "URL avatar", type: "text" },
-      { key: "birth_date", label: "Ngày sinh", type: "date" },
     ],
   },
 ] as const;

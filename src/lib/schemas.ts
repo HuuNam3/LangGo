@@ -23,7 +23,7 @@ export const registerSchema = z
       .string()
       .min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
-    avatarUrl: z.string(),
+    image: z.string(),
     bio: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -96,10 +96,13 @@ export const videoContentSchema = z.object({
 });
 
 export const userAccountSchema = z.object({
-  username: z.string().min(1, "Tên đăng nhập là bắt buộc"),
+  username: z.string(),
   email: z.string().email("Email không hợp lệ"),
-  full_name: z.string().min(1, "Họ tên là bắt buộc"),
-  phone: z.string().optional(),
+  name: z.string().min(1, "Họ tên là bắt buộc"),
+  role: z.string().min(1, "quyền là bắt buộc"),
+  provider: z.string(),
+  image: z.string(),
+  bio: z.string(),
 });
 
 export const userInformationSchema = z.object({

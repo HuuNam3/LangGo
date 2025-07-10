@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { Bell, BookOpen, Menu, Search, User, X, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,29 +21,12 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAuthRedux } from "@/hooks/useAuthRedux"
-import { getNameUser } from "@/lib/queries";
+import { useAuthRedux } from "@/hooks/useAuthRedux";
 
 export function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const { t } = useLanguage();
   const { user: userData, isLoading, logout } = useAuthRedux();
-  const [name, setName] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("/images/avatar.png")
-  useEffect(() => {
-    const handle = async () => {
-      if(userData?.name && userData?.image) {
-        setName(userData.name)
-        setAvatar(userData?.image)
-      } else if(userData?.name === ""){
-        const data = await getNameUser();
-        setName(data)
-      }
-    };
-
-    handle();
-  }, [userData?.image,userData?.name]);
-
   const showAdmin = (role: string): ReactNode => {
     if (role === "admin") {
       return(
@@ -157,19 +140,19 @@ export function Header() {
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
                       <AvatarImage
-                        src={avatar}
-                        alt={name || ""}
+                        src={userData.image}
+                        alt={userData.name || ""}
                       />
                       <AvatarFallback className="bg-violet-700 text-white">
-                        {name?.slice(0, 1).toUpperCase()}
+                        {userData.name?.slice(0, 1).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-auto p-2">
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
-                        {name && (
-                          <p className="font-medium">{name}</p>
+                        {userData.name && (
+                          <p className="font-medium">{userData.name}</p>
                         )}
                         {userData.email && (
                           <p className="text-sm text-muted-foreground">
@@ -246,19 +229,19 @@ export function Header() {
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-8 w-8 border-2 border-white/20 cursor-pointer hover:ring-2 hover:ring-white/30">
                   <AvatarImage
-                    src={avatar}
-                    alt={name || ""}
+                    src={userData.image}
+                    alt={userData.name || ""}
                   />
                   <AvatarFallback className="bg-violet-700 text-white">
-                    {name?.slice(0, 2).toUpperCase()}
+                    {userData.name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <div className="flex items-center justify-start gap-2 p-2">
                   <div className="flex flex-col space-y-1 leading-none">
-                    {name && (
-                      <p className="font-medium">{name}</p>
+                    {userData.name && (
+                      <p className="font-medium">{userData.name}</p>
                     )}
                     {userData.email && (
                       <p className="text-sm text-muted-foreground">

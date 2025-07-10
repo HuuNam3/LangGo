@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { Database, Users, BookOpen, Settings, LogOut, GraduationCap, FileText, Video, Info } from "lucide-react"
+import { Database, Users, BookOpen, Settings, LogOut, GraduationCap, FileText, Video } from "lucide-react"
 import type { SidebarProps } from "@/types/database"
 
 const collectionIcons: Record<string, React.ReactNode> = {
@@ -13,7 +13,6 @@ const collectionIcons: Record<string, React.ReactNode> = {
   user_courses: <GraduationCap className="w-5 h-5" />,
   lessons: <BookOpen className="w-5 h-5" />,
   user_accounts: <Users className="w-5 h-5" />,
-  user_information: <Info className="w-5 h-5" />,
   lesson_contents: <FileText className="w-5 h-5" />,
   video_contents: <Video className="w-5 h-5" />,
 }

@@ -6,7 +6,6 @@ import { getServerSession as getSession } from "next-auth"
 import { compare, hash } from "bcrypt"
 import { JWT } from "next-auth/jwt"
 import { getDb } from "@/lib/mongodb"
-import { ObjectId } from "mongodb"
 
 // Extend User type
 interface ExtendedUser extends User {
@@ -80,6 +79,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             username: user.username,
             role: user.role,
+            image: user.image,
           } as ExtendedUser
         } catch (error) {
           console.error("Error in authorize:", error)
@@ -104,7 +104,6 @@ export const authOptions: NextAuthOptions = {
         if (account?.provider === "google" || account?.provider === "facebook") {
           const db = await getDb();
           const users = db.collection("user_accounts");
-          const usersInfo = db.collection("user_information");
 
           const existingUser = await users.findOne({ email: user.email, provider: "google" });
 
@@ -114,6 +113,8 @@ export const authOptions: NextAuthOptions = {
               email: user.email,
               image: user.image,
               role: "user",
+              bio: "newbie 🌍",
+              joined: new Date(),
               provider: account.provider,
               createdAt: new Date(),
             };
@@ -121,17 +122,6 @@ export const authOptions: NextAuthOptions = {
             const result = await users.insertOne(newUser);
             token.id = result.insertedId.toString(); // gán lại ID
             token.role = "user";
-
-            const newInfoUser = {
-              name: user.name,
-              avatarUrl: user.image,
-              bio: "newbie 🌍",
-              joined: new Date(),
-              createdAt: new Date(),
-              user_accounts_id: new ObjectId(token.id)
-            }
-
-            await usersInfo.insertOne(newInfoUser);
 
           } else {
             token.id = existingUser._id.toString();

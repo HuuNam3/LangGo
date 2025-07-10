@@ -16,8 +16,8 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse>>
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
     const username = formData.get("username") as string;
-    const avatarUrl = (formData.get("avatarUrl") as string) || "/images/avatar.png";
-    const bio = (formData.get("bio") as string) || "Learning languages to explore the world";
+    const image = (formData.get("image") as string) || "/images/avatar.png";
+    const bio = (formData.get("bio") as string) || "newbie 🌍";
 
     // Kiểm tra các trường bắt buộc
     if (!email || !password || !name || !username) {
@@ -27,7 +27,7 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse>>
     // Kết nối với database
     const db = await getDb();
     const userAccounts = db.collection("user_accounts");
-    const userInformation = db.collection("user_information");
+    // const userInformation = db.collection("user_information");
 
     // Kiểm tra email đã tồn tại
     const existingEmail = await userAccounts.findOne({ email });
@@ -53,23 +53,24 @@ export async function POST(request: Request): Promise<NextResponse<ApiResponse>>
       password: hashedPassword,
       name,
       username,
+      image,
+      bio,
+      joined: now,
       createdAt: now,
     };
 
     const userResult = await userAccounts.insertOne(newUser);
 
     // Tạo thông tin user trong collection user_information
-    const newUserInfo = {
-      avatarUrl,
-      name,
-      bio,
-      joined: now,
-      createdAt: now,
-      updatedAt: now,
-      user_accounts_id: userResult.insertedId,
-    };
+    // const newUserInfo = {
+    //   bio,
+    //   joined: now,
+    //   createdAt: now,
+    //   updatedAt: now,
+    //   user_accounts_id: userResult.insertedId,
+    // };
 
-    await userInformation.insertOne(newUserInfo);
+    // await userInformation.insertOne(newUserInfo);
 
     return NextResponse.json({
       success: true,

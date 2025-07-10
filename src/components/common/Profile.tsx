@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { IUserInformation } from "@/types/database";
+import type { IUserAccounts } from "@/types/database";
 import {
   Calendar,
   Edit,
@@ -31,7 +31,7 @@ import { toast } from "sonner";
 dayjs.extend(customParseFormat);
 
 export function Profile() {
-  const [profileData, setProfileData] = useState<IUserInformation>();
+  const [profileData, setProfileData] = useState<IUserAccounts>();
   const [coursesEnrolled, setcoursesEnrolled] = useState(0);
   const [lessonsCompleted, setLessonsCompleted] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
@@ -93,12 +93,10 @@ export function Profile() {
   const getDaysAttended = (): number => {
     if (profileData) {
       const joinedDate = dayjs(
-        new Date(profileData.joined).toLocaleDateString(),
+        new Date(profileData.createdAt).toLocaleDateString(),
         "D/M/YYYY"
       );
-      console.log(joinedDate)
       const today = dayjs().startOf("day");
-      console.log(today.diff(joinedDate, "day"))
       return today.diff(joinedDate, "day");
     }
     return 0;
@@ -163,8 +161,8 @@ export function Profile() {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <Avatar className="h-24 w-24">
                 <AvatarImage
-                  src={profileData.avatarUrl || "/placeholder.svg"}
-                  alt="Profile"
+                  src={profileData.image || "/images/avatar.png"}
+                   alt="Profile"
                 />
                 <AvatarFallback className="text-2xl">
                   {isEditing
@@ -214,8 +212,9 @@ export function Profile() {
                     <p className="text-muted-foreground">{profileData.bio}</p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
+                        <span>Ngày tạo</span>
                         <Calendar className="h-4 w-4" />
-                        {new Date(profileData.joined).toLocaleDateString()}
+                        {new Date(profileData.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </>
@@ -249,9 +248,9 @@ export function Profile() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-indigo-600">
-                {getDaysAttended()}
+                {getDaysAttended() || ""}
               </div>
-              <div className="text-sm text-muted-foreground">Days Attended</div>
+              <div className="text-sm text-muted-foreground">ngày tham gia</div>
             </CardContent>
           </Card>
           <Card>
@@ -260,7 +259,7 @@ export function Profile() {
                 {lessonsCompleted}
               </div>
               <div className="text-sm text-muted-foreground">
-                Lessons Completed
+                Khóa học hoàn thành
               </div>
             </CardContent>
           </Card>
@@ -270,7 +269,7 @@ export function Profile() {
                 {coursesEnrolled}
               </div>
               <div className="text-sm text-muted-foreground">
-                Courses Enrolled
+                khóa học đã đăng ký
               </div>
             </CardContent>
           </Card>

@@ -28,7 +28,7 @@ export default function RegisterPage() {
       email: "",
       password: "",
       confirmPassword: "",
-      avatarUrl: "/images/avatar.png",
+      image: "/images/avatar.png",
       bio: "",
     },
   })
@@ -43,7 +43,7 @@ export default function RegisterPage() {
       formData.append("username", values.username)
       formData.append("email", values.email)
       formData.append("password", values.password)
-      formData.append("avatarUrl", values.avatarUrl)
+      formData.append("image", values.image)
       formData.append("bio", values.bio)
 
       const response = await fetch("/api/auth/register", {

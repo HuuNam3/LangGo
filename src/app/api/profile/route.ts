@@ -15,8 +15,8 @@ export async function GET() {
 
     const db = await getDb();
 
-    const result = await db.collection("user_information").findOne({
-      user_accounts_id: new ObjectId(userId),
+    const result = await db.collection("user_accounts").findOne({
+      _id: new ObjectId(userId),
     });
 
     if (!result) {
@@ -37,10 +37,11 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const db = await getDb();
-    const lessons = db.collection("user_information");
+    const lessons = db.collection("user_accounts");
 
     // Create new lesson
     const result = await lessons.insertOne(body);
+    console.log(result)
 
     return NextResponse.json({
       success: true,
@@ -65,9 +66,9 @@ export async function PUT(request: Request) {
     }
     const userId = new ObjectId(session.user.id);
     const body = await request.json();
-    const result = await db.collection("user_information").updateOne(
+    const result = await db.collection("user_accounts").updateOne(
       {
-        user_accounts_id: userId,
+        _id: userId,
       },
       { $set: body},
       { upsert: false }
