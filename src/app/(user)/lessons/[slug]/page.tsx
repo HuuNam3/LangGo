@@ -21,7 +21,7 @@ export default function LanguageLearningPlatform() {
   const [lessons, setLessons] = useState<ILesson[]>()
   const [lessonsCompleted, setLessonsCompleted] = useState(0)
   const [videoContent, setVideoContent] = useState<IVideoContent>()
-
+  
   useEffect(() => {
     const handle = async () => {
       const res = await fetch(`/api/lessons/${slug}`);

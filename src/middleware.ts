@@ -16,6 +16,7 @@ export async function middleware(req: NextRequest) {
     "/my-courses",
     "/dashboard",
   ];
+  
 
   const isPathProtected = protectedPaths.some(
     (path) => pathname === path || pathname.startsWith(`${path.split(":")[0]}`)
@@ -35,9 +36,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if(!token) {
-    if (pathname === "/dashboard") {
-      // return NextResponse.redirect(new URL("/", req.url));
+  if(token) {
+    if (pathname === "/dashboard" && token.role !== "admin") {
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 

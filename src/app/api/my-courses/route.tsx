@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     const db = await getDb()
     const collection = db.collection("user_courses")
 
-    const  {course_id, enrolled_at, progress } = body
+    const  {course_id, progress } = body
 
     if ( !course_id) {
       return NextResponse.json(
@@ -71,8 +71,8 @@ export async function POST(request: Request) {
     const result = await collection.insertOne({
       user_id: userId,
       course_id: new ObjectId(course_id),
-      enrolled_at: enrolled_at ? new Date(enrolled_at) : new Date(),
       progress: progress ?? 0,
+      createdAt: new Date(),
     })
 
     return NextResponse.json({

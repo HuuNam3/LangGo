@@ -30,7 +30,6 @@ export default function AddEnrollmentForm({
     resolver: zodResolver(enrollmentSchema),
     defaultValues: {
       course_id: courseId,
-      enrolled_at: new Date().toISOString(),
       progress: 0,
     },
   })
@@ -65,17 +64,6 @@ export default function AddEnrollmentForm({
           <FormField
             control={form.control}
             name="course_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="enrolled_at"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

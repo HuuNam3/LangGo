@@ -8,7 +8,7 @@ export interface IUserAccounts {
   username: string;
   passwordHash: string;
   bio?: string;
-  image? : string;
+  image?: string;
   joined: Date;
   role: UserRole;
   createdAt: Date;
@@ -248,27 +248,23 @@ export const collections: Collection[] = [
       { key: "user_id", label: "ID user", type: "text", required: true },
       { key: "course_id", label: "ID khóa học", type: "text", required: true },
       { key: "lesson_id", label: "ID bài học", type: "text", required: true },
+      { key: "current_step", label: "Bước học đang học", type: "number", required: true },
+      { key: "completed_steps", label: "Bước học đã hoàn thành", type: "array", required: true },
       {
         key: "status",
         label: "Trạng thái",
-        type: "combobox",
+        type: "text",
         required: true,
-        options: [
-          {
-            value: "in_progress",
-            label: "đang học",
-          },
-          {
-            value: "completed",
-            label: "hoành thành",
-          },
-        ],
-      },
-      {
-        key: "progress_percent",
-        label: "Tiến độ",
-        type: "number",
-        required: true,
+        // options: [
+        //   {
+        //     value: "in_progress",
+        //     label: "đang học",
+        //   },
+        //   {
+        //     value: "completed",
+        //     label: "hoành thành",
+        //   },
+        // ],
       },
     ],
   },
@@ -293,22 +289,10 @@ export const collections: Collection[] = [
     fields: [
       { key: "user_id", label: "ID người dùng", type: "text", required: true },
       { key: "course_id", label: "ID khóa học", type: "text", required: true },
-      {
-        key: "enrolled_at",
-        label: "Ngày đăng ký",
-        type: "date",
-        required: true,
-      },
-      {
-        key: "progress",
-        label: "tiến độ học (tính theo %)",
-        type: "text",
-        required: true,
-      },
     ],
   },
   {
-    name: "user_accounts", 
+    name: "user_accounts",
     displayName: "Tài khoản người dùng",
     fields: [
       { key: "username", label: "Tên đăng nhập", type: "text", required: true },
