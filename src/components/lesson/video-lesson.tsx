@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ILessonVideos } from "@/types/database";
-import Loading from "../common/loading";
-import YouTubePlayer from "../common/YoutubePlayer";
+import Loading from "@/components/common/LoadingPage"
+import YouTubePlayer from "@/components/common/YoutubePlayer"
 
 interface VideoPlayerProps {
   lessonId: string
