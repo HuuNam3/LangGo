@@ -14,7 +14,7 @@ interface UploadedFile {
   preview: string
 }
 
-export default function WritingLesson() {
+export default function QuizWriten() {
   const [uploadedFiles, setUploadedFiles] = useState<{ [key: string]: UploadedFile }>({})
   const [submitted, setSubmitted] = useState(false)
 

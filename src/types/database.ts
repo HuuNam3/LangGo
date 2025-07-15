@@ -96,9 +96,10 @@ export interface ICourseCatygory {
   updatedAt: Date;
 }
 
-export interface IVideoContent {
+export interface ILessonVideos {
   _id: string;
   url: string;
+  title: string;
   durations: number;
   lesson_id: string;
   subtitle: string;

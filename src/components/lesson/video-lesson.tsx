@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StickyNote,
   Plus,
@@ -9,12 +9,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { ILessonVideos } from "@/types/database";
+import Loading from "../common/loading";
+import YouTubePlayer from "../common/YoutubePlayer";
 
 interface VideoPlayerProps {
-  title?: string;
-  subtitle?: string;
-  duration?: string;
-  videoUrl?: string;
+  lessonId: string
 }
 
 interface Note {
@@ -25,15 +25,25 @@ interface Note {
 }
 
 export default function VideoPlayer({
-  title = "Bài 1: Chào hỏi hàng ngày",
-  subtitle = "Học cách chào hỏi trong các tình huống thường ngày",
-  duration = "11:46",
-  videoUrl = "",
+  lessonId,
 }: VideoPlayerProps) {
   // const [isPlaying, setIsPlaying] = useState(false);
   // const [showSubtitles, setShowSubtitles] = useState(true);
   const [newNote, setNewNote] = useState("");
   const [activeTab, setActiveTab] = useState("transcript");
+  const [videoData, setVideoData] = useState<ILessonVideos>()
+  const [currentTime, setCurrentTime] = useState(0)
+  useEffect(() => {
+    const handle = async () => {
+      const res = await fetch(`/api/lesson_videos?id=${lessonId}`);
+      const data = await res.json();
+      setVideoData(data)
+      console.log(data)
+    }
+    handle();
+  }, [lessonId]);
+
+
 
   // Sample notes data - in real app this would come from a database or state management
   const [savedNotes, setSavedNotes] = useState<Note[]>([
@@ -52,11 +62,22 @@ export default function VideoPlayer({
     },
   ]);
 
+  const formatTimeWithHours = (totalSeconds: string): string => {
+    const hours = Math.floor(Number(totalSeconds) / 3600);
+    const minutes = Math.floor((Number(totalSeconds) % 3600) / 60);
+    const seconds = Math.floor(Number(totalSeconds) % 60);
+
+    const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const paddedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${hours}:${paddedMinutes}:${paddedSeconds}`;
+  }
+
   const addNote = () => {
     if (newNote.trim()) {
       const note: Note = {
         id: Date.now().toString(),
-        timestamp: "0:00", // Current video time
+        timestamp: formatTimeWithHours(currentTime.toFixed(0)), // Current video time
         content: newNote.trim(),
         createdAt: new Date(),
       };
@@ -69,18 +90,14 @@ export default function VideoPlayer({
     setSavedNotes(savedNotes.filter((note) => note.id !== noteId));
   };
 
+  if (!videoData) {
+    return <Loading />
+  }
+
   return (
     <div className="space-y-6">
       {/* Video Player */}
-      <iframe
-        src={videoUrl}
-        title="YouTube video player"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-        className="w-full h-[calc(100vh-10rem)] object-contain"
-      ></iframe>
+      <YouTubePlayer videoId="EZaxhT8JruU" setTime={setCurrentTime} />
 
       {/* Video Info Card */}
       <Card className="p-4">
@@ -88,10 +105,13 @@ export default function VideoPlayer({
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <CardTitle className="text-xl font-bold text-gray-800 mb-2">
-                {title}
+                Video bài giảng: {videoData.title}
               </CardTitle>
-              <p className="text-gray-600 mb-2">{subtitle}</p>
-              <p className="text-sm text-gray-500">Thời lượng: {duration}</p>
+              <p className="text-gray-600 mb-2">
+                {videoData.subtitle}
+              </p>
+              <p className="text-sm text-gray-500">Thời lượng: {videoData.durations}
+              </p>
             </div>
             <Button
               variant="outline"
@@ -100,7 +120,7 @@ export default function VideoPlayer({
               onClick={addNote}
             >
               <Plus className="h-4 w-4" />
-              Thêm ghi chú tại 0:00
+              Thêm ghi chú tại {formatTimeWithHours(currentTime.toFixed(0))}
             </Button>
           </div>
         </CardHeader>

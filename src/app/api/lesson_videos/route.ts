@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Missing ID" }, { status: 400 });
   }
 
-  const lesson = db.collection("video_contents");
+  const lesson = db.collection("lesson_videos");
 
   const lessonVideo = await lesson.findOne({ lesson_id: new ObjectId(id) });
   if (!lessonVideo) {

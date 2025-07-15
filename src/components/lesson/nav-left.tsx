@@ -1,15 +1,33 @@
 "use client";
 import { ILesson } from "@/types/database";
 import LessonCard from "./lesson-card";
+import { useEffect, useState } from "react";
+import { countLessonCompletedOfCourses } from "@/lib/queries";
+import Loading from "../common/loading";
 
-interface CourseSidebarProps {
-  lessons: ILesson[];
-  completedLessons?: number
-  totalLessons?: number
-}
+export default function CourseSidebar({ slug, id, pathName }: { slug: string, id: string, pathName: string}) {
+  const [lessons, setLessons] = useState<ILesson[]>()
+  const [totalLessons, setTotalLessons] = useState(0)
+  const [lessonsCompleted, setLessonsCompleted] = useState(0)
+  const progressPercentage = Math.round((lessonsCompleted / totalLessons) * 100)
 
-export default function CourseSidebar({ lessons, completedLessons = 0, totalLessons = 0 }: CourseSidebarProps) {
-  const progressPercentage = Math.round((completedLessons / totalLessons) * 100)
+  useEffect(() => {
+    const handle = async () => {
+      const res = await fetch(`/api/lessons/${slug}`);
+      const data = await res.json();
+      const query = await countLessonCompletedOfCourses(data[0].course_id)
+      setLessonsCompleted(query)
+      setTotalLessons(data.length)
+      setLessons(data)
+      console.log(data)
+    };
+    handle();
+  }, [slug]);
+
+  if (!lessons) {
+    return <Loading />
+  }
+
   return (
     <div className="w-96 h-full">
       {/* Sidebar Header */}
@@ -43,7 +61,7 @@ export default function CourseSidebar({ lessons, completedLessons = 0, totalLess
             </div>
           </div>
           <span>
-            {completedLessons}/{totalLessons} bài học
+            {lessonsCompleted}/{totalLessons} bài học
           </span>
         </div>
       </div>
@@ -53,7 +71,7 @@ export default function CourseSidebar({ lessons, completedLessons = 0, totalLess
         <h3 className="font-semibold text-gray-800 mb-4">Nội dung khóa học</h3>
         <div className="space-y-2">
           {lessons.map((lesson) => (
-            <LessonCard key={lesson._id} lessonName={lesson.name} />
+            <LessonCard key={lesson._id} lessonName={lesson.name} id={id} pathName={pathName} />
           ))}
         </div>
       </div>

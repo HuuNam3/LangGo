@@ -17,31 +17,31 @@ export default function WrittenLesson() {
               <div className="divide-y">
                 <div className="flex items-center justify-between p-4">
                   <div>
-                    <p className="font-medium">你好</p>
-                    <p className="text-sm text-gray-500">Nǐ hǎo</p>
+                    <p className="font-medium">Hello</p>
+                    <p className="text-sm text-gray-500">Xin chào</p>
                   </div>
                   <PronunciationButton language="english" text="hello" />
                 </div>
                 <div className="flex items-center justify-between p-4">
                   <div>
-                    <p className="font-medium">早上好</p>
-                    <p className="text-sm text-gray-500">Zǎoshang hǎo</p>
+                    <p className="font-medium">Good morning</p>
+                    <p className="text-sm text-gray-500">Chào buổi sáng</p>
                   </div>
-                  <PronunciationButton language="english" text="hello"  />
+                  <PronunciationButton language="english" text="good morning"  />
                 </div>
                 <div className="flex items-center justify-between p-4">
                   <div>
-                    <p className="font-medium">晚上好</p>
-                    <p className="text-sm text-gray-500">Wǎnshang hǎo</p>
+                    <p className="font-medium">Good afternoon</p>
+                    <p className="text-sm text-gray-500">Chào buổi chiều</p>
                   </div>
-                  <PronunciationButton language="english" text="hello"  />
+                  <PronunciationButton language="english" text="good afternoon"  />
                 </div>
                 <div className="flex items-center justify-between p-4">
                   <div>
-                    <p className="font-medium">再见</p>
-                    <p className="text-sm text-gray-500">Zàijiàn</p>
+                    <p className="font-medium">Good evening</p>
+                    <p className="text-sm text-gray-500">Chào buổi tối</p>
                   </div>
-                  <PronunciationButton language="english" text="hello" />
+                  <PronunciationButton language="english" text="good evening" />
                 </div>
               </div>
             </Card>
@@ -60,19 +60,18 @@ export default function WrittenLesson() {
                   <div className="rounded-lg border border-gray-200 p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-bold">你好 / Nǐ hǎo</h3>
-                        <p className="text-gray-600">Hello</p>
+                        <h3 className="text-lg font-bold">Hello</h3>
+                        <p className="text-gray-600">Xin chào</p>
                       </div>
-                      <PronunciationButton language="english" text="hello"  variant="outline" className="rounded-full" />
+                      <PronunciationButton language="english" text="Hello, my name is Nam"  variant="outline" className="rounded-full" />
                     </div>
                     <p className="mb-3 text-gray-700">
-                      This is the most common greeting in Mandarin Chinese. It can be used at any time of the day when
-                      meeting someone.
+                      Đây là lời chào phổ biến nhất trong tiếng . Bạn có thể dùng nó vào bất kỳ thời điểm nào trong ngày khi gặp ai đó.
                     </p>
                     <div className="rounded-md bg-gray-100 p-3">
-                      <p className="font-medium">Example:</p>
-                      <p className="mb-1">你好，我叫小明。(Nǐ hǎo, wǒ jiào Xiǎo Míng.)</p>
-                      <p className="text-gray-600">Hello, my name is Xiao Ming.</p>
+                      <p className="font-medium">Ví dụ:</p>
+                      <p className="mb-1">Hello, my name is Nam.</p>
+                      <p className="text-gray-600">Xin chào, tên tôi là Nam.</p>
                     </div>
                   </div>
 
@@ -80,23 +79,23 @@ export default function WrittenLesson() {
                   <div className="rounded-lg border border-gray-200 p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-bold">早上好 / Zǎoshang hǎo</h3>
-                        <p className="text-gray-600">Good morning</p>
+                        <h3 className="text-lg font-bold">Good morning</h3>
+                        <p className="text-gray-600">Chào buổi sáng</p>
                       </div>
                       <PronunciationButton
                         language="english"
-                        text="hello" 
+                        text="Good morning! The weather is really nice today." 
                         variant="outline"
                         className="rounded-full"
                       />
                     </div>
                     <p className="mb-3 text-gray-700">
-                      Use this greeting in the morning, typically from when you wake up until around 11 AM.
+                      Sử dụng lời chào này vào buổi sáng, thường là từ khi bạn thức dậy cho đến khoảng 8 giờ sáng.
                     </p>
                     <div className="rounded-md bg-gray-100 p-3">
-                      <p className="font-medium">Example:</p>
-                      <p className="mb-1">早上好！今天天气真好。(Zǎoshang hǎo! Jīntiān tiānqì zhēn hǎo.)</p>
-                      <p className="text-gray-600">Good morning! The weather is really nice today.</p>
+                      <p className="font-medium">Ví dụ:</p>
+                      <p className="mb-1">Good morning! The weather is really nice today.</p>
+                      <p className="text-gray-600">Chào buổi sáng! Thời tiết hôm nay đẹp quá!.</p>
                     </div>
                   </div>
 
@@ -104,23 +103,23 @@ export default function WrittenLesson() {
                   <div className="rounded-lg border border-gray-200 p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-bold">晚上好 / Wǎnshang hǎo</h3>
-                        <p className="text-gray-600">Good evening</p>
+                        <h3 className="text-lg font-bold">Good evening</h3>
+                        <p className="text-gray-600">Chào buổi tối</p>
                       </div>
                       <PronunciationButton
                         language="english"
-                        text="hello" 
+                        text="Good evening! Have you eaten yet?" 
                         variant="outline"
                         className="rounded-full"
                       />
                     </div>
                     <p className="mb-3 text-gray-700">
-                      Use this greeting in the evening, typically after sunset or around 6 PM.
+                      Sử dụng lời chào này vào buổi tối, thường là sau khi mặt trời lặn hoặc khoảng 7 giờ chiều.
                     </p>
                     <div className="rounded-md bg-gray-100 p-3">
-                      <p className="font-medium">Example:</p>
-                      <p className="mb-1">晚上好！你吃饭了吗？(Wǎnshang hǎo! Nǐ chīfàn le ma?)</p>
-                      <p className="text-gray-600">Good evening! Have you eaten yet?</p>
+                      <p className="font-medium">Ví dụ:</p>
+                      <p className="mb-1">Good evening! Have you eaten yet?</p>
+                      <p className="text-gray-600">Chào buổi tối! Bạn đã ăn chưa?</p>
                     </div>
                   </div>
 
@@ -128,19 +127,18 @@ export default function WrittenLesson() {
                   <div className="rounded-lg border border-gray-200 p-4">
                     <div className="mb-3 flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-bold">再见 / Zàijiàn</h3>
-                        <p className="text-gray-600">Goodbye</p>
+                        <h3 className="text-lg font-bold">Goodbye</h3>
+                        <p className="text-gray-600">Chào tạm biệt</p>
                       </div>
                       <PronunciationButton language="english" text="hello" variant="outline" className="rounded-full" />
                     </div>
                     <p className="mb-3 text-gray-700">
-                      This is the standard way to say goodbye in Mandarin. It literally means &ldquo;see you
-                      again.&rdquo;
+                      Đây là cách thông thường để nói lời tạm biệt trong tiếng anh. Nghĩa đen của nó là &rdquo;hẹn gặp lại&rdquo;.
                     </p>
                     <div className="rounded-md bg-gray-100 p-3">
-                      <p className="font-medium">Example:</p>
-                      <p className="mb-1">明天见，再见！(Míngtiān jiàn, zàijiàn!)</p>
-                      <p className="text-gray-600">See you tomorrow, goodbye!</p>
+                      <p className="font-medium">Ví dụ:</p>
+                      <p className="mb-1">See you tomorrow, goodbye!</p>
+                      <p className="text-gray-600">Hẹn gặp lại vào ngày mai, tạm biệt!</p>
                     </div>
                   </div>
                 </div>

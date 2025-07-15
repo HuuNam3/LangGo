@@ -13,7 +13,6 @@ import { toast } from "sonner"
 const enrollmentSchema = z.object({
   course_id: z.string(),
   enrolled_at: z.string(),
-  progress: z.number().min(0),
 })
 
 export default function AddEnrollmentForm({
@@ -30,7 +29,6 @@ export default function AddEnrollmentForm({
     resolver: zodResolver(enrollmentSchema),
     defaultValues: {
       course_id: courseId,
-      progress: 0,
     },
   })
 
@@ -64,17 +62,6 @@ export default function AddEnrollmentForm({
           <FormField
             control={form.control}
             name="course_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input type="hidden" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="progress"
             render={({ field }) => (
               <FormItem>
                 <FormControl>

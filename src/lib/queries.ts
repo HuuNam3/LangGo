@@ -43,7 +43,9 @@ export async function countLessonCompleted(): Promise<number> {
   }
 }
 
-export async function countLessonCompletedOfCourses(idCourses: string): Promise<number> {
+export async function countLessonCompletedOfCourses(
+  idCourses: string
+): Promise<number> {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -63,7 +65,9 @@ export async function countLessonCompletedOfCourses(idCourses: string): Promise<
   }
 }
 
-export async function countLessionsOfCourses(idCourses: string): Promise<number> {
+export async function countLessionsOfCourses(
+  idCourses: string
+): Promise<number> {
   try {
     const db = await getDb();
     const count = await db.collection("lessons").countDocuments({
@@ -122,4 +126,34 @@ export async function checkCourses(courses_id: string): Promise<number> {
   }
 }
 
+export async function getLessonIdBySlug(slug: string): Promise<string>  {
+  try {
+    const db = await getDb();
+    const courses = await db.collection("courses").findOne({ slug });
+    if (!courses) {
+      throw new Error("courses not found");
+    }
+    const lessons = await db.collection("lessons").findOne({ course_id: courses._id})
+    if (!lessons) {
+      throw new Error("courses not found");
+    }
+    return lessons._id.toString();
+  } catch (error) {
+    console.error("countLessonCompleted error:", error);
+    throw error;
+  }
+}
 
+// export async function getLessonByCoursesId(id: string): Promise<string>  {
+//   try {
+//     const db = await getDb();
+//     const lessons = await db.collection("lessons").findOne({ course_id: id})
+//     if (!lessons) {
+//       throw new Error("courses not found");
+//     }
+//     return lessons._id.toString();
+//   } catch (error) {
+//     console.error("countLessonCompleted error:", error);
+//     throw error;
+//   }
+// }

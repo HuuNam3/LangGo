@@ -3,59 +3,71 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VideoLesson from "@/components/lesson/video-lesson"
-// import WritenLesson from "@/components/lesson/writen-lesson"
-// import QuizVideo from "@/components/lesson/quiz-video"
 import NavLeft from "@/components/lesson/nav-left";
-// import QuizNonWriten from "@/components/lesson/quiz-non-writen"
-import { useEffect, useState } from "react";
-import { useSearchParams, useParams } from 'next/navigation'
-import { ILesson, IVideoContent } from "@/types/database";
-import LoadingPage from "@/components/common/LoadingPage";
-import { countLessonCompletedOfCourses } from "@/lib/queries"
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams, useParams, useRouter, usePathname } from 'next/navigation'
+import { getLessonIdBySlug } from "@/lib/queries"
+import QuizVideo from "@/components/lesson/quiz-video";
+import WritenLesson from "@/components/lesson/writen-lesson";
+import QuizNonWriten from "@/components/lesson/quiz-non-writen";
+import QuizWriten from "@/components/lesson/quiz-writen";
 
 export default function LanguageLearningPlatform() {
   const params = useParams();
+  const router = useRouter()
+  const pathname = usePathname()
   const slug = typeof params.slug === "string" ? params.slug : "";
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  const [lessons, setLessons] = useState<ILesson[]>()
-  const [lessonsCompleted, setLessonsCompleted] = useState(0)
-  const [videoContent, setVideoContent] = useState<IVideoContent>()
-  
+  const [id, setId] = useState(searchParams.get("id"))
+  const [lessonId, setLessonId] = useState<string>("")
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams]
+  )
+
   useEffect(() => {
     const handle = async () => {
-      const res = await fetch(`/api/lessons/${slug}`);
-      const data = await res.json();
-      const res1 = await fetch(`/api/video_contents?id=${encodeURIComponent(data[0]._id)}`);
-      const data1 = await res1.json();
-      console.log(data1)
-      setVideoContent(data1)
-      const query = await countLessonCompletedOfCourses(data[0].course_id)
-      setLessonsCompleted(query)
-      setLessons(data)
+      const lessonid = await getLessonIdBySlug(slug)
+      setLessonId(lessonid)
+      setId(lessonid)
+      if (!id) {
+        router.push(pathname + '?' + createQueryString('id', lessonid) + "&" + createQueryString('type', 'video'))
+      }
     };
     handle();
-  }, [id, slug]);
+  }, [slug, pathname, router, createQueryString, id, searchParams]);
 
-  if (!lessons || !videoContent) {
-    return <LoadingPage />
+  const renderType = () => {
+    const type = searchParams.get("type")
+    if (type == "video") {
+      return (<VideoLesson lessonId={lessonId} />)
+    } else if (type == "quizVideo") {
+      return (<QuizVideo />)
+    } else if (type == "writen") {
+      return (<WritenLesson />)
+    } else if (type == "quizWriten") {
+      return (<QuizWriten />)
+    } else if (type == "quizNonWriten") {
+      return (<QuizNonWriten />)
+    }
   }
 
   return (
     <div className="min-h-screen w-full bg-gray-50 flex">
       {/* Main Content */}
       <div className="flex-1 p-2">
-        {/* Video Player Component */}
-          <VideoLesson subtitle={videoContent.subtitle} videoUrl={videoContent.url} title={lessons[0]?.name} 
-        />
-        {/* <WritenLesson/> */}
-        {/* <QuizVideo/> */}
-        {/* <QuizNonWriten/> */}
+        {renderType()}
       </div>
 
       {/* Course Sidebar Component */}
       <div className="pt-2">
-        <NavLeft lessons={lessons} completedLessons={lessonsCompleted} totalLessons={lessons.length}
+        <NavLeft slug={slug} id={id || ""} pathName={pathname}
         />
       </div>
 
