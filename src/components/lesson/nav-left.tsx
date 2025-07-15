@@ -3,7 +3,7 @@ import { ILesson } from "@/types/database";
 import LessonCard from "./lesson-card";
 import { useEffect, useState } from "react";
 import { countLessonCompletedOfCourses } from "@/lib/queries";
-import Loading from "../common/loading";
+import Loading from "@/components/common/LoadingPage"
 
 export default function CourseSidebar({ slug, id, pathName }: { slug: string, id: string, pathName: string}) {
   const [lessons, setLessons] = useState<ILesson[]>()
